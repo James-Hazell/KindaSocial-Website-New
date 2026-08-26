@@ -85,6 +85,20 @@ set, the form submits over `fetch` and shows an inline success message instead o
 
 ---
 
+## A shareable preview
+
+```bash
+npm run preview:bundle
+```
+
+Collapses the built site into one self-contained HTML file at
+`preview/kindasocial-preview.html` — every page, fonts inlined, client-side switching between
+routes. Useful for sending someone the site before there is anywhere to deploy it. It is a preview
+of the real build, not a second copy to maintain: it is generated from `dist/`, so it can never
+drift from the site.
+
+---
+
 ## Deploying
 
 The build output in `dist/` is plain static files — any host will serve it.

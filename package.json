@@ -9,7 +9,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "preview:bundle": "astro build && node scripts/bundle-preview.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
