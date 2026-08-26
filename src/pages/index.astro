@@ -1,77 +1,44 @@
 ---
 import Base from '~/layouts/Base.astro';
+import HeroBand from '~/components/HeroBand.astro';
 import SectionHead from '~/components/SectionHead.astro';
 import Portrait from '~/components/Portrait.astro';
 import Marquee from '~/components/Marquee.astro';
 import FeaturedIn from '~/components/FeaturedIn.astro';
 import TestimonialRail from '~/components/TestimonialRail.astro';
 import SocialTile from '~/components/SocialTile.astro';
+import TileGrid from '~/components/TileGrid.astro';
+import CityStrip from '~/components/CityStrip.astro';
 import CtaBand from '~/components/CtaBand.astro';
-import { site, services, results, differences, proofPoints, process, workTiles } from '~/data/site';
+import { services, results, differences, proofPoints, process, workTiles, clientTypes } from '~/data/site';
 ---
 
 <Base
   title="KindaSocial — the ecosystem behind the personal brands you actually follow"
   suffix={false}>
   <!-- ============================================ hero -->
-  <section class="hero">
-    <div class="glow" aria-hidden="true"></div>
+  <HeroBand
+    src="/images/hero.jpg"
+    alt="A KindaSocial client filming to camera"
+    eyebrow="Now booking · two creator slots"
+    title="You stay on camera.<br />We run <em>the machine</em>."
+    lede="KindaSocial is the back office for personal brands. Strategy, content, distribution and the inbox — run by us, so the expert can go back to being the expert."
+    seed={1}>
+    <a class="btn btn--caps" href="/contact">
+      Apply for a slot
+      <span class="btn__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="btn btn--caps btn--ghost" href="/results">See the numbers</a>
+  </HeroBand>
 
-    <div class="shell hero__inner">
-      <div class="hero__lead">
-        <p class="label label--pink" data-reveal>Now booking · two creator slots</p>
-
-        <h1 class="display hero__title" data-reveal="text">
-          You stay on<br />camera. We run<br />
-          <span class="editorial">the machine</span><span class="accent-pink">.</span>
-        </h1>
-
-        <p class="lead hero__lede" data-reveal>
-          KindaSocial is the back office for personal brands. Strategy, content, distribution and
-          the inbox — run by us, so the expert can go back to being the expert.
-        </p>
-
-        <div class="actions hero__actions" data-reveal>
-          <a class="btn btn--violet" href="/contact">
-            Apply for a slot
-            <span class="btn__arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="btn btn--ghost" href="/results">See the numbers</a>
-        </div>
-      </div>
-
-      <!-- Two frames, offset. One picture reads as a headshot; two read as a shoot. -->
-      <div class="hero__cluster">
-        <Portrait
-          class="hero__shot hero__shot--main"
-          src="/images/amy-hero.jpg"
-          alt={`${site.founder}, founder of ${site.name}`}
-          caption={`${site.founder} · founder`}
-          ratio="4 / 5"
-          seed={1}
-          loading="eager"
-          reveal={false}
-        />
-        <Portrait
-          class="hero__shot hero__shot--inset"
-          src="/images/amy-working.jpg"
-          alt="Behind a KindaSocial batch day"
-          ratio="1 / 1"
-          seed={4}
-          loading="eager"
-          reveal={false}
-        />
-      </div>
-    </div>
-
+  <section class="section--tight">
     <div class="shell">
       <dl class="stats">
         <div class="stats__item" data-reveal>
           <dt class="label">Own account</dt>
           <dd>
             <span class="stat__figure tnum">800 → 40k</span>
-            <span class="stat__caption">Followers in under six months, before we sold the method.</span
-            >
+            <span class="stat__caption">Followers in under six months, before we sold the method.</span>
           </dd>
         </div>
         <div class="stats__item" data-reveal>
@@ -93,6 +60,18 @@ import { site, services, results, differences, proofPoints, process, workTiles }
   </section>
 
   <FeaturedIn />
+
+  <!-- ============================================ who we work with -->
+  <section class="section on-pearl who">
+    <div class="shell">
+      <SectionHead
+        label="Who we work with"
+        title="Experts, not accounts."
+        aside="A short list on purpose. The roster is capped because Amy directs every account, so the people on it have something in common."
+      />
+      <TileGrid items={clientTypes} columns={4} />
+    </div>
+  </section>
 
   <!-- ============================================ the problem -->
   <section class="section problem">
@@ -142,7 +121,6 @@ import { site, services, results, differences, proofPoints, process, workTiles }
   <section class="section on-pearl services" id="what-we-do">
     <div class="shell">
       <SectionHead
-        index="02"
         label="What we do"
         title="Six jobs. One machine."
         aside="Every part connects to the next. Strategy tells production what to make, production feeds distribution, distribution fills the inbox, and the inbox tells strategy what to do next month."
@@ -176,7 +154,6 @@ import { site, services, results, differences, proofPoints, process, workTiles }
   <section class="section work">
     <div class="shell">
       <SectionHead
-        index="03"
         label="The work"
         title="One system, four jobs."
         aside="Every asset comes off the same template set, so an account looks like one brand rather than twelve moods. These are the live templates, not screenshots of them."
@@ -209,7 +186,6 @@ import { site, services, results, differences, proofPoints, process, workTiles }
   <section class="section proof">
     <div class="shell">
       <SectionHead
-        index="04"
         label="Proof"
         title="Receipts, not adjectives."
         aside="Two accounts, the same method. The mechanism is in the write-up, not just the screenshot."
@@ -264,7 +240,8 @@ import { site, services, results, differences, proofPoints, process, workTiles }
 
       <div class="how__body">
         <SectionHead
-          index="05"
+          align="left"
+          index="04"
           label="How it works"
           title="Five steps. You are needed for two."
         />
@@ -297,7 +274,6 @@ import { site, services, results, differences, proofPoints, process, workTiles }
   <section class="section why">
     <div class="shell">
       <SectionHead
-        index="06"
         label="Why this one"
         title="Sharp where the rest are beige."
         aside="Clients pick the agency that is visibly better at the thing they are hiring for. This is ours."
@@ -321,7 +297,6 @@ import { site, services, results, differences, proofPoints, process, workTiles }
   <section class="section on-pearl voices">
     <div class="shell">
       <SectionHead
-        index="07"
         label="Client said"
         title="The line we hear most."
         aside="Hover to hold one still."
@@ -330,6 +305,8 @@ import { site, services, results, differences, proofPoints, process, workTiles }
 
     <TestimonialRail tone="pearl" />
   </section>
+
+  <CityStrip />
 
   <CtaBand
     label="Now booking · Q3"
@@ -430,7 +407,6 @@ import { site, services, results, differences, proofPoints, process, workTiles }
   }
 
   .stats {
-    margin-top: clamp(3rem, 6vw, 5rem);
     padding-top: 2rem;
     border-top: 1px solid var(--line);
     display: grid;

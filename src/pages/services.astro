@@ -28,7 +28,6 @@ const forWhom = [
   title="Services"
   description="Strategy, content production, distribution, community ops, paid amplification and brand systems — the full back office for a personal brand.">
   <PageHero
-    index="01"
     label="Services"
     title="Six jobs. <em>One machine.</em>"
     lede="Most agencies sell you a piece of this and leave the rest on your desk. The parts only work connected — strategy tells production what to make, production feeds distribution, distribution fills the inbox, and the inbox rewrites next month's strategy."
@@ -84,7 +83,6 @@ const forWhom = [
   <section class="section on-pearl proc">
     <div class="shell">
       <SectionHead
-        index="02"
         label="The engagement"
         title="What the first ninety days look like."
         aside="Nothing gets published in the first two weeks. That is deliberate — it is the part that stops the content sounding like an agency wrote it."
@@ -120,7 +118,7 @@ const forWhom = [
   <section class="section fit">
     <div class="shell fit__grid">
       <div class="fit__col">
-        <SectionHead index="03" label="Who this is for" title="A short list, on purpose." />
+        <SectionHead label="Who this is for" title="A short list, on purpose." />
         <dl class="fit__list">
           {
             forWhom.map((f) => (
@@ -134,7 +132,7 @@ const forWhom = [
       </div>
 
       <div class="fit__col">
-        <SectionHead index="04" label="What you will not get" title="Stated plainly." />
+        <SectionHead label="What you will not get" title="Stated plainly." />
         <ul class="nots">
           {
             notIncluded.map((n) => (

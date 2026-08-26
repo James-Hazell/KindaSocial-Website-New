@@ -27,9 +27,10 @@ Node 18 or newer.
 src/
   data/site.ts          all copy, pricing, services, FAQs — edit here, not in the pages
   layouts/Base.astro    <head>, SEO meta, JSON-LD, the scroll-reveal observer
-  components/           TopBar, Nav, Footer, Wordmark, Monogram, PageHero,
-                        SectionHead, Portrait, CtaBand, Faq, Marquee,
-                        FeaturedIn, TestimonialRail, SocialTile
+  components/           TopBar, Nav, Footer, Wordmark, Monogram, HeroBand,
+                        PageHero, SectionHead, Portrait, TileGrid, CityStrip,
+                        CtaBand, Faq, Marquee, FeaturedIn, TestimonialRail,
+                        SocialTile, ScrollTop
   pages/                one file per route
   styles/global.css     the design system — tokens, type scale, layout primitives, motion
 public/
@@ -39,6 +40,22 @@ public/
 
 **To change copy or pricing, edit `src/data/site.ts`.** The pages read from it, so a price change
 lands everywhere at once — cards, comparison table, meta descriptions.
+
+---
+
+## Layout reference
+
+The composition follows prestidgegroup.com, at the client's direction: a permanent solid masthead
+rather than a transparent header, full-bleed image bands opening every page with the headline
+centred over a scrim, centred section heads with one narrow line beneath, photo tiles with the
+caption laid directly on the image, square corners throughout, a press band, a reach strip, a
+services mega-menu and a circular back-to-top.
+
+What did **not** come across is the palette and typography. That side stays KindaSocial's own —
+Midnight/Pearl/Chrome with Violet and Hot Pink, DM Sans and Instrument Serif, Title Case rather
+than the reference's centred all-caps. Violet in particular was pulled back off buttons toward the
+5% the guidelines actually specify, which is both closer to the reference's restraint and more
+faithful to the brand document than the earlier build was.
 
 ---
 

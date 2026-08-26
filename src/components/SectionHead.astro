@@ -4,38 +4,75 @@ interface Props {
   label: string;
   title: string;
   aside?: string;
+  /** Centred is the default composition; pass "left" for the editorial rails. */
+  align?: 'center' | 'left';
   class?: string;
 }
 
-const { index, label, title, aside, class: className = '' } = Astro.props;
+const { index, label, title, aside, align = 'center', class: className = '' } = Astro.props;
 ---
 
-<header class:list={['sec-head', className]}>
-  <div class="sec-head__top" data-reveal>
-    <span class="label">{label}</span>
-    {index && <span class="index">/ {index.split('').join(' ')}</span>}
-  </div>
+{
+  align === 'center' ? (
+    <header class:list={['sec-head', 'sec-head--mid', className]}>
+      <span class="label" data-reveal>
+        {label}
+      </span>
+      <h2 class="sec-head__title" data-reveal="text">
+        {title}
+      </h2>
+      {aside && (
+        <p class="lead sec-head__aside" data-reveal>
+          {aside}
+        </p>
+      )}
+    </header>
+  ) : (
+    <header class:list={['sec-head', className]}>
+      <div class="sec-head__top" data-reveal>
+        <span class="label">{label}</span>
+        {index && <span class="index">/ {index.split('').join(' ')}</span>}
+      </div>
 
-  <div class="sec-head__body">
-    <h2 class="h2" data-reveal="text">{title}</h2>
-    {aside && <p class="lead sec-head__aside" data-reveal>{aside}</p>}
-  </div>
-</header>
+      <div class="sec-head__body">
+        <h2 class="h2" data-reveal="text">
+          {title}
+        </h2>
+        {aside && (
+          <p class="lead sec-head__aside" data-reveal>
+            {aside}
+          </p>
+        )}
+      </div>
+    </header>
+  )
+}
 
 <style>
+  .sec-head--mid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .sec-head--mid .sec-head__title {
+    font-family: var(--font-display);
+    font-weight: 500;
+  }
+
   .sec-head__body {
     display: grid;
     gap: 1.25rem;
   }
 
   @media (min-width: 62rem) {
-    .sec-head__body {
+    .sec-head:not(.sec-head--mid) .sec-head__body {
       grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
       gap: clamp(2rem, 5vw, 5rem);
       align-items: end;
     }
 
-    .sec-head__aside {
+    .sec-head:not(.sec-head--mid) .sec-head__aside {
       padding-bottom: 0.35rem;
     }
   }

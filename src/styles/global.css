@@ -50,8 +50,8 @@
   --measure: 62ch;
   --shell: 1240px;
   --section-y: clamp(4.5rem, 3rem + 7vw, 8.5rem);
-  --radius: 4px;
-  --radius-lg: 10px;
+  --radius: 0px;
+  --radius-lg: 0px;
 
   /* Motion — whisper level */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -409,6 +409,15 @@ p {
   --btn-bg: #7d50ff;
 }
 
+/* Uppercase button — the reference sets every action this way. */
+.btn--caps {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 1.05rem 1.75rem;
+}
+
 .btn--ghost {
   --btn-bg: transparent;
   --btn-fg: var(--pearl);
@@ -569,6 +578,28 @@ p {
 }
 
 /* ---------- 9. Shared components ---------- */
+
+/* Centred section heading — the reference's core compositional move.
+   Label above, big title, one narrow centred line beneath. */
+.sec-head--mid {
+  text-align: center;
+  align-items: center;
+  margin-bottom: clamp(2.5rem, 4vw, 4rem);
+}
+
+.sec-head--mid .sec-head__title {
+  font-size: clamp(1.9rem, 1.25rem + 2.6vw, 3.25rem);
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  max-width: 20ch;
+  margin-inline: auto;
+}
+
+.sec-head--mid .sec-head__aside {
+  margin-inline: auto;
+  max-width: 58ch;
+  text-align: center;
+}
 
 /* Section heading block */
 .sec-head {

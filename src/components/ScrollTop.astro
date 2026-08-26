@@ -1,0 +1,68 @@
+---
+/** Circular back-to-top, bottom-right. Appears once there is something to go back up to. */
+---
+
+<button class="totop" type="button" data-totop hidden aria-label="Back to top">
+  <svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true">
+    <path d="M7 12V2M2.5 6.5L7 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+  </svg>
+</button>
+
+<style>
+  .totop {
+    position: fixed;
+    right: clamp(1rem, 2.5vw, 2rem);
+    bottom: clamp(1rem, 2.5vw, 2rem);
+    z-index: 90;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: rgb(14 24 50 / 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--pearl);
+    cursor: pointer;
+    opacity: 0;
+    translate: 0 8px;
+    transition:
+      opacity 320ms var(--ease),
+      translate 320ms var(--ease),
+      border-color 320ms var(--ease);
+  }
+
+  .totop[hidden] {
+    display: none;
+  }
+
+  .totop.is-in {
+    opacity: 1;
+    translate: 0;
+  }
+
+  .totop:hover {
+    border-color: var(--pink);
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-totop]');
+
+  if (btn) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    btn.hidden = false;
+
+    const onScroll = () => btn.classList.toggle('is-in', window.scrollY > window.innerHeight * 0.9);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+      // Send focus somewhere sensible rather than leaving it on a button that
+      // just faded out from under the pointer.
+      document.querySelector<HTMLElement>('#main')?.focus?.();
+    });
+  }
+</script>

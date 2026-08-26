@@ -314,28 +314,67 @@ export const testimonials = [
 
 /* ------------------------------------------------------------- featured in */
 /*
- * The scrolling credibility banner.
+ * Placements supplied by the client — personal brands KindaSocial has worked
+ * with that have appeared in these outlets. Note what the line claims: the
+ * clients were featured, not the agency. Keep that distinction if you edit it.
  *
- * Seeded with the platforms the work actually runs on, because that is
- * verifiable. To turn this into a press bar, replace `items` with real
- * publications, podcasts or stages you or your clients have appeared on, and
- * change `label` to "As featured in". Do not list anything that has not
- * actually happened — it is the one claim on the site a prospect can check.
+ * Names are set in type rather than reproduced as logo files: nominative use of
+ * a name is normal for a credit list, redrawing someone's logo is not. `face`
+ * picks a treatment that evokes each wordmark.
  */
 
 export const featuredIn = {
-  label: 'Where the work runs',
+  label: 'Featured in',
+  headline: 'We’ve worked with personal brands that have been featured in',
   items: [
-    'Instagram',
-    'TikTok',
-    'LinkedIn',
-    'YouTube Shorts',
-    'Meta Ads',
-    'Facebook',
-    'Email',
-    'Skool',
+    { name: 'Bloomberg', face: 'sans' },
+    { name: 'Forbes', face: 'serif-caps' },
+    { name: 'TED', face: 'sans-caps' },
+    { name: 'BBC', face: 'sans-caps' },
+    { name: 'Vogue', face: 'serif-wide' },
+    { name: 'Financial Times', face: 'serif-caps' },
+    { name: 'NBC', face: 'sans-caps' },
+    { name: 'Mindvalley', face: 'sans' },
   ],
 } as const;
+
+/* ---------------------------------------------------------------- reach */
+/* Where clients are, not where we have offices — the strip says so. */
+
+export const cities = [
+  { name: 'London', region: 'United Kingdom & Europe' },
+  { name: 'New York', region: 'United States' },
+  { name: 'Sydney', region: 'Australia' },
+] as const;
+
+/* -------------------------------------------------------- who we work with */
+
+export const clientTypes = [
+  {
+    caption: 'Coaches selling expertise at £2k and up, where trust does the closing',
+    alt: 'A coach recording to camera',
+    src: '/images/client-coach.jpg',
+    seed: 1,
+  },
+  {
+    caption: 'Founders whose company grows faster when the person in front of it does',
+    alt: 'A founder on stage',
+    src: '/images/client-founder.jpg',
+    seed: 5,
+  },
+  {
+    caption: 'Consultants whose buyers are on LinkedIn before they are anywhere else',
+    alt: 'A consultant at work',
+    src: '/images/client-consultant.jpg',
+    seed: 3,
+  },
+  {
+    caption: 'Online educators running courses, cohorts and memberships on authority',
+    alt: 'An educator filming a lesson',
+    src: '/images/client-educator.jpg',
+    seed: 6,
+  },
+] as const;
 
 /* --------------------------------------------------------------- the work */
 /*

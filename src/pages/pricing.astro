@@ -27,7 +27,6 @@ const cell = (v: string | boolean) => (v === true ? '✓' : v === false ? '—' 
   title="Pricing"
   description="Three retainers from $1,900 to $3,900 a month, plus add-ons and the KindaSocial Club membership from $49. Rolling agreements, no twelve-month lock-in.">
   <PageHero
-    index="04"
     label="Pricing"
     title="Three retainers.<br /><em>Stated plainly.</em>"
     lede="Rolling monthly agreements, not twelve-month lock-ins. Prices are per month in US dollars and exclude media spend. If the work stops earning the retainer, you should be able to leave — so you can."
@@ -72,7 +71,7 @@ const cell = (v: string | boolean) => (v === true ? '✓' : v === false ? '—' 
               </ul>
 
               <a
-                class:list={['btn', 'pack__cta', p.featured ? 'btn--violet' : 'btn--ghost']}
+                class:list={['btn', 'pack__cta', p.featured ? 'btn--caps' : 'btn--caps btn--ghost']}
                 href="/contact">
                 Apply for {p.name}
                 <span class="btn__arrow" aria-hidden="true">
@@ -95,7 +94,6 @@ const cell = (v: string | boolean) => (v === true ? '✓' : v === false ? '—' 
   <section class="section on-pearl compare">
     <div class="shell">
       <SectionHead
-        index="02"
         label="Side by side"
         title="What changes between them."
         aside="The jump from Lite to Growth is volume plus the inbox. The jump to Premium is LinkedIn and the written long-form that comes with it."

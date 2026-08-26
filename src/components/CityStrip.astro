@@ -1,0 +1,117 @@
+---
+import { cities } from '~/data/site';
+
+/**
+ * The reach strip — city names set huge over angled photo slices.
+ *
+ * Lifted from the reference's DUBAI / NYC / LONDON / MIAMI band, with one
+ * change that matters: those are their offices, these are where the clients
+ * are. The label says so rather than implying a presence that is not there.
+ */
+const shades = [
+  { a: '#3a2f45', b: '#7d6a86' },
+  { a: '#2c3350', b: '#6f74a2' },
+  { a: '#4a3b31', b: '#b08d64' },
+];
+---
+
+<section class="strip" aria-label="Where our clients are">
+  <div class="strip__slices" aria-hidden="true">
+    {
+      cities.map((c, i) => (
+        <div class="strip__slice" style={`--a:${shades[i % shades.length]!.a};--b:${shades[i % shades.length]!.b}`} />
+      ))
+    }
+  </div>
+
+  <div class="shell strip__inner">
+    <span class="label strip__label" data-reveal>Where our clients are</span>
+    <ul class="strip__cities">
+      {
+        cities.map((c) => (
+          <li class="strip__city" data-reveal>
+            <span class="strip__name">{c.name}</span>
+            <span class="strip__region">{c.region}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .strip {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border-block: 1px solid var(--line);
+  }
+
+  .strip__slices {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    display: flex;
+  }
+
+  /* The angled cut is what stops this reading as three stacked boxes. */
+  .strip__slice {
+    flex: 1;
+    background: linear-gradient(160deg, var(--a) 0%, var(--b) 100%);
+    clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
+    margin-inline: -3%;
+  }
+
+  .strip__slices::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(10 18 40 / 0.72) 0%, rgb(10 18 40 / 0.86) 100%);
+  }
+
+  .strip__inner {
+    position: relative;
+    padding-block: clamp(3rem, 6vw, 5rem);
+    text-align: center;
+  }
+
+  .strip__label {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .strip__cities {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  @media (min-width: 48rem) {
+    .strip__cities {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+  }
+
+  .strip__city {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .strip__name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2rem, 1rem + 4.2vw, 3.75rem);
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    color: var(--pearl);
+  }
+
+  .strip__region {
+    font-size: var(--t-label);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--chrome);
+  }
+</style>

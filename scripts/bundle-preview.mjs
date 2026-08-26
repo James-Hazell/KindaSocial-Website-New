@@ -63,9 +63,13 @@ const between = (html, open, close) => {
 
 const first = read(routes[0].file);
 
-// Nav and footer are identical across pages, so the shell comes from the first.
+// Nav, footer and the back-to-top live outside <main>, identical on every page,
+// so the shell comes from the first.
 const shellNav = between(first, '<header class="nav"', '</header>');
 const shellFooter = between(first, '<footer class="foot"', '</footer>');
+const shellTopbar = between(first, '<aside class="topbar"', '</aside>');
+const totopMatch = first.match(/<button class="totop"[\s\S]*?<\/button>/);
+const shellTotop = totopMatch ? totopMatch[0] : '';
 
 const panels = routes.map((r) => {
   const html = read(r.file);
@@ -93,6 +97,8 @@ ${css}
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="grain" aria-hidden="true"></div>
 
+<aside class="topbar"${shellTopbar}</aside>
+
 <header class="nav"${shellNav}</header>
 
 <main id="main">
@@ -104,6 +110,8 @@ ${panels
 </main>
 
 <footer class="foot"${shellFooter}</footer>
+
+${shellTotop}
 
 <script>
 (function () {
@@ -211,6 +219,42 @@ ${panels
     });
     window.matchMedia('(min-width: 62rem)').addEventListener('change', function (e) {
       if (e.matches && open) setOpen(false);
+    });
+  }
+
+  /* ---- services mega-menu ---- */
+  var menu = document.querySelector('[data-menu]');
+  var menuToggle = document.querySelector('[data-menu-toggle]');
+  if (menu && menuToggle) {
+    var menuOpen = false;
+    var setMenu = function (next) {
+      menuOpen = next;
+      menu.classList.toggle('is-open', next);
+      menuToggle.setAttribute('aria-expanded', String(next));
+    };
+    menuToggle.addEventListener('click', function () { setMenu(!menuOpen); });
+    menu.addEventListener('mouseenter', function () { setMenu(true); });
+    menu.addEventListener('mouseleave', function () { setMenu(false); });
+    menu.addEventListener('focusin', function () { setMenu(true); });
+    menu.addEventListener('focusout', function (e) {
+      if (!menu.contains(e.relatedTarget)) setMenu(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menuOpen) { setMenu(false); menuToggle.focus(); }
+    });
+  }
+
+  /* ---- back to top ---- */
+  var totop = document.querySelector('[data-totop]');
+  if (totop) {
+    totop.hidden = false;
+    var onTop = function () {
+      totop.classList.toggle('is-in', window.scrollY > window.innerHeight * 0.9);
+    };
+    onTop();
+    window.addEventListener('scroll', onTop, { passive: true });
+    totop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
     });
   }
 

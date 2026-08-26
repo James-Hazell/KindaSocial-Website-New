@@ -1,0 +1,163 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+/**
+ * Full-bleed image band with the headline set over it.
+ *
+ * The reference opens every page this way — image edge to edge, type centred
+ * on top, content starting cleanly beneath. It is the single most defining
+ * thing about that layout, so it is what the pages open with here too.
+ *
+ * Falls back to the same golden-hour study the Portrait frames use when the
+ * photograph is not there yet.
+ */
+interface Props {
+  src?: string;
+  alt?: string;
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  height?: string;
+  seed?: number;
+}
+
+const {
+  src,
+  alt = '',
+  eyebrow,
+  title,
+  lede,
+  height = 'clamp(24rem, 62vh, 40rem)',
+  seed = 1,
+} = Astro.props;
+
+const exists = src ? fs.existsSync(path.join(process.cwd(), 'public', src.replace(/^\//, ''))) : false;
+const uid = `hb${seed}-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+<section class="band" style={`--band-h:${height}`}>
+  <div class="band__media" aria-hidden={exists ? undefined : 'true'}>
+    {
+      exists ? (
+        <img src={src} alt={alt} class="band__img" fetchpriority="high" decoding="async" />
+      ) : (
+        <svg class="band__img" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id={`${uid}-w`} x1="0.1" y1="0" x2="0.85" y2="1">
+              <stop offset="0%" stop-color="#1a1712" />
+              <stop offset="38%" stop-color="#5c4733" />
+              <stop offset="72%" stop-color="#b98d5c" />
+              <stop offset="100%" stop-color="#e8cfa6" />
+            </linearGradient>
+            <linearGradient id={`${uid}-c`} x1="0" y1="0" x2="0.5" y2="1">
+              <stop offset="0%" stop-color="#1d150e" stop-opacity="0.55" />
+              <stop offset="100%" stop-color="#1d150e" stop-opacity="0.08" />
+            </linearGradient>
+            <filter id={`${uid}-g`}>
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" />
+              <feColorMatrix type="saturate" values="0" />
+            </filter>
+          </defs>
+          <rect width="1600" height="900" fill={`url(#${uid}-w)`} />
+          <g transform="rotate(-12 800 450)">
+            <rect x="-400" y="-560" width="2600" height="720" fill={`url(#${uid}-c)`} />
+          </g>
+          <rect width="1600" height="900" filter={`url(#${uid}-g)`} opacity="0.05" />
+        </svg>
+      )
+    }
+    <div class="band__scrim"></div>
+  </div>
+
+  <div class="shell band__inner">
+    {eyebrow && <span class="label label--pink band__eyebrow" data-reveal>{eyebrow}</span>}
+    <h1 class="band__title" data-reveal="text" set:html={title} />
+    {lede && <p class="band__lede" data-reveal>{lede}</p>}
+    <div class="band__actions actions" data-reveal>
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .band {
+    position: relative;
+    min-height: var(--band-h);
+    display: grid;
+    align-items: center;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .band__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .band__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Type sits on a photograph, so the scrim is doing accessibility work, not
+     decoration — it is what keeps the headline above AA on any image. */
+  .band__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(68% 58% at 50% 48%, rgb(10 18 40 / 0.74) 0%, rgb(10 18 40 / 0.22) 100%),
+      linear-gradient(180deg, rgb(10 18 40 / 0.42) 0%, rgb(10 18 40 / 0.22) 42%, rgb(10 18 40 / 0.82) 100%);
+  }
+
+  .band__inner {
+    position: relative;
+    text-align: center;
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .band__eyebrow {
+    margin-bottom: 1.25rem;
+  }
+
+  .band__title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    /* Floor sized so “You stay on camera.” clears the gutter at 390px. */
+    font-size: clamp(1.75rem, 1.05rem + 3.6vw, 4.5rem);
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+    max-width: 19ch;
+    text-wrap: balance;
+    color: var(--pearl);
+  }
+
+  .band__title :global(em) {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .band__lede {
+    margin-top: 1.5rem;
+    max-width: 54ch;
+    font-size: var(--t-lead);
+    line-height: 1.5;
+    color: rgb(239 238 240 / 0.82);
+  }
+
+  .band__actions {
+    margin-top: 2.25rem;
+    justify-content: center;
+  }
+
+  .band__actions:empty {
+    display: none;
+  }
+</style>

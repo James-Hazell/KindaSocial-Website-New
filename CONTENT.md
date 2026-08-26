@@ -13,13 +13,16 @@ The founder photography was not accessible to the build, so both portrait slots 
 golden-hour light study instead. It looks deliberate rather than broken, but a face beats an
 abstract every time on a personal-branding site.
 
-There are now **eleven** image slots across the site. Drop files into `public/images/` using the
-filenames in `public/images/README.md` and they replace the placeholders automatically — one at a
-time is fine, there is no all-or-nothing.
+There are now **nineteen** image slots. Drop files into `public/images/` using the filenames in
+`public/images/README.md` and they replace the placeholders automatically — one at a time is fine.
 
-The two that matter most are `amy-hero.jpg` (home hero, 4:5) and `amy-portrait.jpg` (about page,
-4:5). The warm sunset-on-a-cream-wall frames already shot are exactly right; the full table of
-slots, crops and export sizes is in `public/images/README.md`.
+The six that matter most are the **page hero bands** (`hero.jpg`, `hero-services.jpg`, and so on).
+Every page now opens with a full-bleed image, which is the single most defining thing about the
+reference site's layout — and the one place a placeholder is most obvious. A 16:9 frame with some
+depth in the middle works best, since the headline sits over it behind a scrim.
+
+After those, `amy-portrait.jpg` on the About page. The warm sunset-on-a-cream-wall frames already
+shot are exactly right.
 
 ## 2. Testimonials — currently placeholders
 
@@ -32,20 +35,26 @@ from about four.
 Per the brand's own rule — specific over clever — real attribution is worth chasing: a first name,
 a discipline, and ideally a number in the quote itself.
 
-## 2b. The "featured in" banner — currently platforms, not press
+## 2b. Press placements — now live, one wording change to approve
 
-You asked for a scrolling banner of where clients have been featured. The component is built and
-running, but I seeded it with the **platforms the work runs on** rather than publications, because
-I cannot invent press credits — that banner is the one claim on the site a prospect can actually
-check, and a fabricated one is worse than none.
+The banner runs your supplied placements: **Bloomberg, Forbes, TED, BBC, Vogue, Financial Times,
+NBC, Mindvalley.** They live in `src/data/site.ts` → `featuredIn`.
 
-To turn it into a real press bar, open `src/data/site.ts` → `featuredIn`, replace `items` with
-publications, podcasts or stages you or your clients have genuinely appeared on, and change `label`
-to `'As featured in'`. It renders anywhere from three names upward, and the section hides itself
-entirely if you empty the array.
+Two things to check:
 
-Names are set as wordmarks rather than logo files, deliberately: a row of mismatched PNGs at
-different weights is what cheap sites do here, and other companies' logos are their trademarks.
+**The pronoun.** You sent "I've worked with personal brands that have been featured in". The site
+says **"We've"**, because your brand strategy puts the agency in we-language and Amy's personal
+brand in I-language. If you want the founder voice on the agency site here, it is one word in
+`featuredIn.headline`.
+
+**What the line claims.** It says your *clients* were featured, not that KindaSocial was. That
+distinction is doing real work — keep it if you rewrite the line, because it is the difference
+between a true claim and one that will not survive being checked.
+
+Names are set in type rather than reproduced as logo files: each gets a treatment that evokes its
+real wordmark (Forbes and the FT as upright serif caps, Vogue letterspaced, TED and NBC as tight
+sans caps). Using a publication's name in a credit list is normal; redrawing their logo is not, so
+the site does the first and not the second.
 
 ## 3. Contact details — confirm these are right
 
