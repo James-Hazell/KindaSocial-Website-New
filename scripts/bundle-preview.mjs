@@ -50,30 +50,86 @@ const cssFiles = fs
   // Base first so page styles keep winning, same order the real pages load them.
   .sort((a, b) => (a.startsWith('Base') ? -1 : b.startsWith('Base') ? 1 : a.localeCompare(b)));
 
-const css = cssFiles.map((f) => inlineFonts(read(`_astro/${f}`))).join('\n');
+// Astro's inlineStylesheets:'auto' emits small stylesheets as <style> in each
+// page's <head> instead of as a file, so reading _astro/*.css alone silently
+// loses component CSS — which is how the hero band arrived here unstyled.
+const inlineBlocks = [];
+for (const r of routes) {
+  const html = read(r.file);
+  for (const m of html.matchAll(/<style>([\s\S]*?)<\/style>/g)) {
+    if (!inlineBlocks.includes(m[1])) inlineBlocks.push(m[1]);
+  }
+}
+
+const css = [
+  ...cssFiles.map((f) => inlineFonts(read(`_astro/${f}`))),
+  ...inlineBlocks.map(inlineFonts),
+].join('\n');
+
+// Fail loudly rather than shipping a page that merely looks wrong. These are
+// rules the layout cannot do without; if the collection above ever misses a
+// source again, the build stops here instead of at the user.
+for (const rule of ['band__scrim', 'band__inner', 'nav__bar', 'tiles', 'fi__track']) {
+  if (!css.includes(rule)) throw new Error(`bundle-preview: stylesheet is missing .${rule}`);
+}
 
 /* ------------------------------------------------------- 2. markup per route */
 
-const between = (html, open, close) => {
-  const a = html.indexOf(open);
-  if (a === -1) return '';
-  const b = html.lastIndexOf(close);
-  return html.slice(a + open.length, b);
+/**
+ * Pull one element out of the built HTML, opening tag to matching close.
+ *
+ * Naive indexOf/lastIndexOf does not work here: SectionHead renders a <header>,
+ * the rails render <aside>, so "last closing tag on the page" is nowhere near
+ * the element being extracted. This walks forward counting depth instead, and
+ * throws rather than returning a plausible-looking wrong slice — a bundler that
+ * silently emits three copies of the nav is worse than one that stops.
+ */
+const extract = (html, startMarker, tag) => {
+  const a = html.indexOf(startMarker);
+  if (a === -1) throw new Error(`bundle-preview: could not find ${startMarker}`);
+
+  const open = new RegExp(`<${tag}\\b`, 'g');
+  const close = new RegExp(`</${tag}\\s*>`, 'g');
+  open.lastIndex = a;
+
+  let depth = 0;
+  let i = a;
+
+  while (i < html.length) {
+    open.lastIndex = i;
+    close.lastIndex = i;
+    const o = open.exec(html);
+    const c = close.exec(html);
+    if (!c) throw new Error(`bundle-preview: unclosed <${tag}> from ${startMarker}`);
+
+    if (o && o.index < c.index) {
+      depth += 1;
+      i = o.index + o[0].length;
+    } else {
+      depth -= 1;
+      i = c.index + c[0].length;
+      if (depth === 0) return html.slice(a, i);
+    }
+  }
+  throw new Error(`bundle-preview: unbalanced <${tag}> from ${startMarker}`);
 };
+
+/** Inner HTML of an element, for the route panels. */
+const innerOf = (outer, tag) =>
+  outer.slice(outer.indexOf('>') + 1, outer.lastIndexOf(`</${tag}`));
 
 const first = read(routes[0].file);
 
-// Nav, footer and the back-to-top live outside <main>, identical on every page,
-// so the shell comes from the first.
-const shellNav = between(first, '<header class="nav"', '</header>');
-const shellFooter = between(first, '<footer class="foot"', '</footer>');
-const shellTopbar = between(first, '<aside class="topbar"', '</aside>');
-const totopMatch = first.match(/<button class="totop"[\s\S]*?<\/button>/);
-const shellTotop = totopMatch ? totopMatch[0] : '';
+// Nav, top bar, footer and the back-to-top live outside <main>, identical on
+// every page, so the shell comes from the first.
+const shellNav = extract(first, '<header class="nav"', 'header');
+const shellFooter = extract(first, '<footer class="foot"', 'footer');
+const shellTopbar = extract(first, '<aside class="topbar"', 'aside');
+const shellTotop = extract(first, '<button class="totop"', 'button');
 
 const panels = routes.map((r) => {
   const html = read(r.file);
-  const main = between(html, '<main id="main">', '</main>');
+  const main = innerOf(extract(html, '<main id="main"', 'main'), 'main');
   const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || 'KindaSocial';
   return { ...r, main, title };
 });
@@ -97,9 +153,9 @@ ${css}
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="grain" aria-hidden="true"></div>
 
-<aside class="topbar"${shellTopbar}</aside>
+${shellTopbar}
 
-<header class="nav"${shellNav}</header>
+${shellNav}
 
 <main id="main">
 ${panels
@@ -109,7 +165,7 @@ ${panels
   .join('\n')}
 </main>
 
-<footer class="foot"${shellFooter}</footer>
+${shellFooter}
 
 ${shellTotop}
 
