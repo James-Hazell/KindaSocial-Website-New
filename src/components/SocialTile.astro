@@ -1,0 +1,150 @@
+---
+/**
+ * A 1:1 social tile, built to Brand Guidelines §09.
+ *
+ * Rendered live rather than screenshotted, so it stays sharp at any size and
+ * can never drift from the brand. Four jobs, one system — each `kind` gets its
+ * own ground so a row of them reads as a set rather than four of the same card.
+ *
+ * §10: the monogram sits bottom-right on every original asset. Never the full
+ * wordmark on a social tile.
+ */
+import Monogram from './Monogram.astro';
+
+interface Props {
+  kind: 'quote' | 'announcement' | 'carousel' | 'said';
+  eyebrow: string;
+  headline: string;
+  foot?: string;
+}
+
+const { kind, eyebrow, headline, foot } = Astro.props;
+
+// Announcement knocks out on violet; carousel is the pearl one in the set.
+const markTone = kind === 'carousel' ? 'muted' : 'pearl';
+---
+
+<figure class:list={['tile', `tile--${kind}`]}>
+  <span class="tile__eyebrow">— {eyebrow}</span>
+
+  <p class="tile__headline">{headline}</p>
+
+  <div class="tile__foot">
+    {foot && <span class="tile__footnote">{foot}</span>}
+    <span class="tile__mark"><Monogram size={18} tone={markTone} /></span>
+  </div>
+</figure>
+
+<style>
+  .tile {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.1rem, 3.2cqw, 1.75rem);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    container-type: inline-size;
+    /* Tiles sit in a grid that narrows a long way; the type has to track the
+       tile, not the viewport, or a 3-up row breaks before the page does. */
+    font-size: clamp(0.8rem, 3.4cqw, 1rem);
+  }
+
+  .tile__eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.62em;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: lowercase;
+    opacity: 0.72;
+  }
+
+  .tile__headline {
+    margin-top: auto;
+    padding-top: 1.2em;
+    font-family: var(--font-display);
+    font-size: 1.62em;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+    text-wrap: pretty;
+  }
+
+  .tile__foot {
+    margin-top: 1.1em;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1em;
+  }
+
+  .tile__footnote {
+    font-family: var(--font-body);
+    font-size: 0.68em;
+    line-height: 1.45;
+    opacity: 0.75;
+    max-width: 24ch;
+  }
+
+  .tile__mark {
+    margin-left: auto;
+    line-height: 1;
+  }
+
+  /* ---- a · quote / insight / field note ---- */
+  .tile--quote {
+    background:
+      radial-gradient(120% 90% at 12% 8%, rgb(110 60 255 / 0.24) 0%, rgb(110 60 255 / 0) 58%),
+      var(--midnight-raised);
+    color: var(--pearl);
+  }
+
+  .tile--quote .tile__eyebrow {
+    color: var(--chrome);
+  }
+
+  /* ---- b · announcement / booking / launch ---- */
+  .tile--announcement {
+    background: linear-gradient(158deg, var(--violet) 0%, #4a1fd6 62%, var(--violet-deep) 100%);
+    color: #fff;
+    border-color: rgb(239 238 240 / 0.2);
+  }
+
+  .tile--announcement .tile__eyebrow,
+  .tile--announcement .tile__footnote {
+    opacity: 0.86;
+  }
+
+  /* ---- c · carousel ---- */
+  .tile--carousel {
+    background: var(--pearl);
+    color: var(--ink);
+    border-color: var(--line-dark);
+  }
+
+  .tile--carousel .tile__eyebrow,
+  .tile--carousel .tile__footnote {
+    color: var(--ink-muted);
+    opacity: 1;
+  }
+
+  /* ---- d · client said ---- */
+  .tile--said {
+    background: var(--midnight-sunken);
+    color: var(--pearl);
+  }
+
+  .tile--said .tile__eyebrow {
+    color: var(--pink);
+    opacity: 1;
+  }
+
+  .tile--said .tile__headline {
+    font-size: 1.32em;
+  }
+
+  .tile--said .tile__footnote {
+    color: var(--chrome);
+  }
+</style>

@@ -4,6 +4,8 @@ import PageHero from '~/components/PageHero.astro';
 import SectionHead from '~/components/SectionHead.astro';
 import CtaBand from '~/components/CtaBand.astro';
 import Faq from '~/components/Faq.astro';
+import Portrait from '~/components/Portrait.astro';
+import FeaturedIn from '~/components/FeaturedIn.astro';
 import { services, process, faqs } from '~/data/site';
 
 const notIncluded = [
@@ -49,7 +51,7 @@ const forWhom = [
             </div>
 
             <div class="svc__main">
-              <h2 class="h2 svc__title" data-reveal>
+              <h2 class="h2 svc__title" data-reveal="text">
                 {s.title}
               </h2>
               <p class="lead svc__lede" data-reveal>
@@ -76,6 +78,8 @@ const forWhom = [
     </div>
   </section>
 
+  <FeaturedIn tone="dark" />
+
   <!-- ============================================ process -->
   <section class="section on-pearl proc">
     <div class="shell">
@@ -85,6 +89,15 @@ const forWhom = [
         title="What the first ninety days look like."
         aside="Nothing gets published in the first two weeks. That is deliberate — it is the part that stops the content sounding like an agency wrote it."
       />
+
+      <div class="proc__media">
+        <Portrait
+          src="/images/process-01.jpg"
+          alt="A positioning sprint in progress"
+          ratio="21 / 9"
+          seed={4}
+        />
+      </div>
 
       <ol class="proc__grid">
         {
@@ -232,6 +245,10 @@ const forWhom = [
   }
 
   /* ---------- process ---------- */
+  .proc__media {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
   .proc__grid {
     display: grid;
     gap: 1.25rem;

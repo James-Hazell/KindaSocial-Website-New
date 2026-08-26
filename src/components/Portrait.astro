@@ -19,6 +19,8 @@ interface Props {
   seed?: number;
   class?: string;
   loading?: 'lazy' | 'eager';
+  /** Set false to opt a frame out of the wipe-in (e.g. above the fold). */
+  reveal?: boolean;
 }
 
 const {
@@ -29,24 +31,29 @@ const {
   seed = 1,
   class: className = '',
   loading = 'lazy',
+  reveal = true,
 } = Astro.props;
 
 const exists = src ? fs.existsSync(path.join(process.cwd(), 'public', src.replace(/^\//, ''))) : false;
 
-// Three light studies, so repeated frames on one page do not read as copies.
+// Six light studies, so repeated frames on one page never read as copies.
 // Deliberately architectural rather than figurative: the raking sun line, the warm
 // pool, the cast band of a window frame — the light in the room, minus the person.
+// The last two run cool, so a wall of frames is not a wall of the same amber.
 const studies = [
-  { shade: '#5d4b3c', warm: '#e3b981', glow: '#fdf3e0', angle: 24, bandX: 176, bandW: 62, poolX: 0.7, poolY: 0.74 },
-  { shade: '#4f4034', warm: '#d9ab72', glow: '#faedd9', angle: -16, bandX: 58, bandW: 48, poolX: 0.3, poolY: 0.66 },
-  { shade: '#6b5644', warm: '#eac693', glow: '#fff6e8', angle: 38, bandX: 122, bandW: 76, poolX: 0.58, poolY: 0.82 },
+  { shade: '#5d4b3c', warm: '#e3b981', glow: '#fdf3e0', angle: 24, bandX: 176, bandW: 62, poolX: 0.7, poolY: 0.74, pool: '#fff7e6' },
+  { shade: '#4f4034', warm: '#d9ab72', glow: '#faedd9', angle: -16, bandX: 58, bandW: 48, poolX: 0.3, poolY: 0.66, pool: '#fff7e6' },
+  { shade: '#6b5644', warm: '#eac693', glow: '#fff6e8', angle: 38, bandX: 122, bandW: 76, poolX: 0.58, poolY: 0.82, pool: '#fff7e6' },
+  { shade: '#7a5a3e', warm: '#f0c489', glow: '#fff4e2', angle: 12, bandX: 210, bandW: 44, poolX: 0.8, poolY: 0.58, pool: '#ffeccd' },
+  { shade: '#2f3350', warm: '#7d7fa8', glow: '#dcd9e8', angle: -28, bandX: 96, bandW: 58, poolX: 0.42, poolY: 0.7, pool: '#e8e4f6' },
+  { shade: '#26304d', warm: '#6f74a2', glow: '#d3d2e4', angle: 30, bandX: 150, bandW: 70, poolX: 0.64, poolY: 0.78, pool: '#e2ddf4' },
 ];
 const s = studies[(seed - 1) % studies.length]!;
 const uid = `p${seed}-${Math.random().toString(36).slice(2, 7)}`;
 ---
 
 <figure class:list={['portrait', className]} style={`--ratio:${ratio}`}>
-  <div class="portrait__frame">
+  <div class="portrait__frame" data-reveal={reveal ? 'media' : undefined}>
     {
       exists ? (
         <img src={src} alt={alt} loading={loading} decoding="async" class="portrait__img" />
@@ -72,8 +79,8 @@ const uid = `p${seed}-${Math.random().toString(36).slice(2, 7)}`;
               <stop offset="100%" stop-color="#2b2015" stop-opacity="0.02" />
             </linearGradient>
             <radialGradient id={`${uid}-pool`} cx={s.poolX} cy={s.poolY} r="0.58">
-              <stop offset="0%" stop-color="#fff7e6" stop-opacity="0.62" />
-              <stop offset="100%" stop-color="#fff7e6" stop-opacity="0" />
+              <stop offset="0%" stop-color={s.pool} stop-opacity="0.62" />
+              <stop offset="100%" stop-color={s.pool} stop-opacity="0" />
             </radialGradient>
             <filter id={`${uid}-soft`} x="-25%" y="-25%" width="150%" height="150%">
               <feGaussianBlur stdDeviation="5" />
@@ -108,7 +115,7 @@ const uid = `p${seed}-${Math.random().toString(36).slice(2, 7)}`;
 
   {
     caption && (
-      <figcaption class="portrait__caption">
+      <figcaption class="portrait__caption" data-reveal={reveal ? '' : undefined}>
         <span class="label">{caption}</span>
       </figcaption>
     )

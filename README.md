@@ -27,8 +27,9 @@ Node 18 or newer.
 src/
   data/site.ts          all copy, pricing, services, FAQs — edit here, not in the pages
   layouts/Base.astro    <head>, SEO meta, JSON-LD, the scroll-reveal observer
-  components/           Nav, Footer, Wordmark, Monogram, PageHero, SectionHead,
-                        Portrait, CtaBand, Faq, Marquee
+  components/           TopBar, Nav, Footer, Wordmark, Monogram, PageHero,
+                        SectionHead, Portrait, CtaBand, Faq, Marquee,
+                        FeaturedIn, TestimonialRail, SocialTile
   pages/                one file per route
   styles/global.css     the design system — tokens, type scale, layout primitives, motion
 public/
@@ -51,6 +52,7 @@ lands everywhere at once — cards, comparison table, meta descriptions.
 | §04 The mark, with the weight rule at small sizes | `components/Monogram.astro` |
 | §05 Five colours, strict proportions | `:root` tokens in `global.css` |
 | §06 DM Sans display, Inter body, Instrument Serif italic accent | `--font-*` tokens, `.display`/`.h1`/`.h2` |
+| §09 The four social templates | `components/SocialTile.astro`, rendered live on the home page |
 | §07–08 Voice — confident, dry, specific | all copy in `src/data/site.ts` |
 
 Colour proportion holds across the site: Midnight and Pearl carry 80%+ of every surface, Violet
@@ -68,9 +70,23 @@ Two deliberate deviations from a literal reading of the guidelines, both for scr
 
 ### Motion
 
-One pattern: `data-reveal` on an element fades and lifts it 16px when it scrolls into view, with a
-small stagger inside each group. The observer is in `Base.astro`. Everything is disabled under
-`prefers-reduced-motion: reduce`, including the marquee.
+Four reveal types, not one — uniform fade-up on everything is what makes a page read as templated.
+Set with `data-reveal` on any element; the observer lives in `Base.astro`.
+
+| Value | Entrance | Used for |
+| --- | --- | --- |
+| *(empty)* | fade, 12px rise | body copy, cards, list rows |
+| `text` | clip-wipe downward, no opacity | headings — type arrives rather than materialises |
+| `media` | wipe up, picture settles out of a slight push-in | images and framed panels |
+| `rule` | scaleX from the left | hairlines |
+
+Stagger is counted **per section**, not across the document, so the tenth section starts its own
+sequence rather than picking up mid-way through a global one.
+
+Three things loop continuously: the proof marquee, the featured-in rail and the testimonial rail
+(two rows, opposite directions, pausing on hover and on keyboard focus). All motion — reveals,
+marquees and the top bar's pulse — stops under `prefers-reduced-motion: reduce`, where the rails
+become ordinary scrollers with a tab stop.
 
 ---
 
@@ -123,6 +139,10 @@ The site was verified at 320, 390, 768, 1024 and 1440px with no horizontal overf
 with axe-core against WCAG 2.1 A/AA plus best-practice rules — **zero violations across all seven
 pages**. Keyboard navigation, the mobile menu (including Escape-to-close and focus return) and the
 FAQ accordion were tested directly.
+
+One thing worth knowing before you edit: the `Monogram` tones (`pearl`, `chrome`, `muted`) are each
+calibrated to the ground they sit on. Fading one with `opacity` to make it recede drops it under AA
+and, per the guidelines' own rule, makes the mark look like dust. Pick a different tone instead.
 
 ---
 

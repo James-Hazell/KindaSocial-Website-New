@@ -1,0 +1,150 @@
+---
+/**
+ * The bar above the nav. Carries the one piece of information that is
+ * time-sensitive — how many slots are open — so it never has to be hunted for
+ * inside the page. Scrolls away; the nav stays.
+ */
+import { site } from '~/data/site';
+
+interface Props {
+  message?: string;
+  cta?: { label: string; href: string };
+}
+
+const {
+  message = 'Two creator slots open for Q3',
+  cta = { label: 'Apply', href: '/contact' },
+} = Astro.props;
+---
+
+<aside class="topbar" aria-label="Availability and coverage">
+  <div class="shell topbar__inner">
+    <p class="topbar__msg">
+      <span class="topbar__dot" aria-hidden="true"></span>
+      <span class="topbar__now">Now booking</span>
+      <span class="topbar__sep" aria-hidden="true">·</span>
+      <span>{message}</span>
+    </p>
+
+    <div class="topbar__end">
+      <span class="topbar__where">{site.regions.join(' · ')}</span>
+      <a class="topbar__cta" href={cta.href}>
+        {cta.label}
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .topbar {
+    background: var(--midnight-sunken);
+    border-bottom: 1px solid var(--line);
+    font-size: var(--t-label);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .topbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    min-height: 2.375rem;
+    padding-block: 0.5rem;
+  }
+
+  @media (min-width: 62rem) {
+    .topbar__inner {
+      justify-content: space-between;
+    }
+  }
+
+  .topbar__msg {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--chrome);
+    text-align: center;
+  }
+
+  .topbar__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--pink);
+    flex-shrink: 0;
+    /* A slow pulse. It is the only thing on the page that moves on its own. */
+    animation: pulse 2.8s var(--ease-io) infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(0.82);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .topbar__dot {
+      animation: none;
+    }
+  }
+
+  .topbar__now {
+    color: var(--pink);
+  }
+
+  .topbar__sep {
+    color: var(--line-strong);
+  }
+
+  /* The region list is context, not headline — it goes when space is tight. */
+  .topbar__end {
+    display: none;
+  }
+
+  @media (min-width: 62rem) {
+    .topbar__end {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+  }
+
+  .topbar__where {
+    /* 0.62 landed at 4.38:1 on the sunken ground — under AA for 11px text. */
+    color: rgb(181 186 199 / 0.75);
+    letter-spacing: 0.12em;
+  }
+
+  .topbar__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--pearl);
+    padding-bottom: 1px;
+    border-bottom: 1px solid var(--line-strong);
+    transition: border-color 280ms var(--ease);
+  }
+
+  .topbar__cta:hover,
+  .topbar__cta:focus-visible {
+    border-bottom-color: var(--pink);
+  }
+
+  /* Phones get the message only — two lines of uppercase micro-type in a
+     38px bar is worse than one. */
+  @media (max-width: 30rem) {
+    .topbar__now,
+    .topbar__sep {
+      display: none;
+    }
+  }
+</style>

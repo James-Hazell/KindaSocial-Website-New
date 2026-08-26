@@ -1,0 +1,195 @@
+---
+/**
+ * Two rows of testimonials running in opposite directions, continuously.
+ *
+ * The counter-motion is the point: a single row reads as a widget, two reading
+ * against each other reads as a wall of people. Pauses on hover and on keyboard
+ * focus so a quote can actually be read, and falls back to a normal scroller
+ * under reduced motion.
+ */
+import Monogram from './Monogram.astro';
+import { testimonials } from '~/data/site';
+
+interface Props {
+  tone?: 'dark' | 'pearl';
+}
+
+const { tone = 'dark' } = Astro.props;
+
+const half = Math.ceil(testimonials.length / 2);
+const rows = [testimonials.slice(0, half), testimonials.slice(half)];
+---
+
+<div class:list={['rail-wrap', `rail-wrap--${tone}`]}>
+  {
+    rows.map((row, r) => (
+      <div
+        class="trail"
+        data-dir={r === 0 ? 'fwd' : 'rev'}
+        tabindex="0"
+        role="group"
+        aria-label={`Client testimonials, row ${r + 1} of ${rows.length}`}>
+        {/* Duplicated once so the loop has something to run into. The copy is
+            hidden from assistive tech — the same quotes read twice is noise. */}
+        {[0, 1].map((copy) => (
+          <ul class="trail__track" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {row.map((t) => (
+              <li class="tcard">
+                <div class="tcard__mark" aria-hidden="true">
+                  <Monogram size={18} tone={tone === 'pearl' ? 'muted' : 'chrome'} />
+                </div>
+                <blockquote class="tcard__quote">{t.quote}</blockquote>
+                <figcaption class="tcard__by label">
+                  {t.attribution} · {t.role}
+                </figcaption>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .rail-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* Fade the ends so cards enter and leave rather than being cut off. */
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .trail {
+    display: flex;
+    width: max-content;
+    gap: 1rem;
+  }
+
+  .trail:focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 4px;
+    border-radius: var(--radius);
+  }
+
+  .trail__track {
+    display: flex;
+    gap: 1rem;
+    animation: trail-fwd 64s linear infinite;
+  }
+
+  .trail[data-dir='rev'] .trail__track {
+    animation-name: trail-rev;
+    animation-duration: 76s;
+  }
+
+  @keyframes trail-fwd {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - 1rem));
+    }
+  }
+
+  @keyframes trail-rev {
+    from {
+      transform: translateX(calc(-100% - 1rem));
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  /* Let people actually read one. */
+  .rail-wrap:hover .trail__track,
+  .rail-wrap:focus-within .trail__track {
+    animation-play-state: paused;
+  }
+
+  .tcard {
+    flex: 0 0 auto;
+    width: min(23rem, 78vw);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 1.6rem 1.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--midnight-raised);
+  }
+
+  .rail-wrap--pearl .tcard {
+    background: #fff;
+    border-color: var(--line-dark);
+  }
+
+  /* No opacity fade here. The Monogram tones are already calibrated to their
+     ground; dimming one drops it under AA and makes the mark look like dust. */
+  .tcard__mark {
+    position: absolute;
+    top: 1.6rem;
+    right: 1.6rem;
+  }
+
+  .tcard__quote {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    color: var(--pearl);
+    padding-right: 2rem;
+    flex: 1;
+    text-wrap: pretty;
+  }
+
+  .rail-wrap--pearl .tcard__quote {
+    color: var(--ink);
+  }
+
+  .tcard__quote::before {
+    content: '“';
+  }
+
+  .tcard__quote::after {
+    content: '”';
+  }
+
+  .tcard__by {
+    margin-top: 1.25rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .rail-wrap--pearl .tcard__by {
+    border-top-color: var(--line-dark);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail-wrap {
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+
+    .trail {
+      width: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+
+    .trail__track {
+      animation: none;
+    }
+
+    /* Nothing moves, so the duplicate row is dead weight. */
+    .trail__track[aria-hidden='true'] {
+      display: none;
+    }
+
+    .tcard {
+      scroll-snap-align: start;
+    }
+  }
+</style>

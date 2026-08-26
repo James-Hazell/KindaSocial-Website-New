@@ -55,6 +55,7 @@
 
   /* Motion — whisper level */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
   --dur: 640ms;
 
@@ -461,12 +462,24 @@ p {
 
 /* ---------- 8. Motion — reveal on scroll ---------- */
 
+/*
+ * Four reveal types, not one. Uniform fade-up on every element is what makes a
+ * page feel templated; different content wants different entrances.
+ *
+ *   data-reveal            soft fade, 12px rise      body copy, cards, list rows
+ *   data-reveal="text"     clip-wipe downward        headings — no opacity flicker
+ *   data-reveal="media"    wipe + scale settle       images and framed panels
+ *   data-reveal="rule"     scaleX from the left      hairlines
+ *
+ * Delay is set per section by the observer, so a long page never queues a wait.
+ */
+
 [data-reveal] {
   opacity: 0;
-  transform: translate3d(0, 16px, 0);
+  transform: translate3d(0, 12px, 0);
   transition:
-    opacity var(--dur) var(--ease),
-    transform var(--dur) var(--ease);
+    opacity 760ms var(--ease-out),
+    transform 760ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
@@ -477,12 +490,49 @@ p {
   will-change: auto;
 }
 
+/* Headings wipe rather than fade — type should arrive, not materialise.
+   Insets stay negative at rest so descenders and italic overhang are never cut. */
+[data-reveal='text'] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(-0.16em -0.12em 100% -0.12em);
+  transition: clip-path 1080ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal='text'].is-in {
+  clip-path: inset(-0.16em -0.12em -0.3em -0.12em);
+}
+
+/* Media wipes up while the picture inside settles out of a slight push-in. */
+[data-reveal='media'] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1180ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal='media'].is-in {
+  clip-path: inset(0 0 0 0);
+}
+
+[data-reveal='media'] > * {
+  scale: 1.07;
+  transition: scale 1500ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal='media'].is-in > * {
+  scale: 1;
+}
+
 [data-reveal='rule'] {
   opacity: 1;
   transform: none;
   transform-origin: left center;
   scale: 0 1;
-  transition: scale 900ms var(--ease);
+  transition: scale 980ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -504,10 +554,17 @@ p {
   }
 
   [data-reveal],
+  [data-reveal='text'],
+  [data-reveal='media'],
   [data-reveal='rule'] {
     opacity: 1;
     transform: none;
     scale: 1 1;
+    clip-path: none;
+  }
+
+  [data-reveal='media'] > * {
+    scale: 1;
   }
 }
 

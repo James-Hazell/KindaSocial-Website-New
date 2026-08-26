@@ -18,7 +18,7 @@ const { index, label, title, lede, meta } = Astro.props;
       <span class="index">/ {index.split('').join(' ')}</span>
     </div>
 
-    <h1 class="hero__title h1" data-reveal set:html={title} />
+    <h1 class="hero__title h1" data-reveal="text" set:html={title} />
 
     {lede && <p class="lead hero__lede" data-reveal>{lede}</p>}
 

@@ -3,9 +3,11 @@ import Base from '~/layouts/Base.astro';
 import SectionHead from '~/components/SectionHead.astro';
 import Portrait from '~/components/Portrait.astro';
 import Marquee from '~/components/Marquee.astro';
+import FeaturedIn from '~/components/FeaturedIn.astro';
+import TestimonialRail from '~/components/TestimonialRail.astro';
+import SocialTile from '~/components/SocialTile.astro';
 import CtaBand from '~/components/CtaBand.astro';
-import Monogram from '~/components/Monogram.astro';
-import { site, services, results, differences, proofPoints, testimonials, process } from '~/data/site';
+import { site, services, results, differences, proofPoints, process, workTiles } from '~/data/site';
 ---
 
 <Base
@@ -19,7 +21,7 @@ import { site, services, results, differences, proofPoints, testimonials, proces
       <div class="hero__lead">
         <p class="label label--pink" data-reveal>Now booking · two creator slots</p>
 
-        <h1 class="display hero__title" data-reveal>
+        <h1 class="display hero__title" data-reveal="text">
           You stay on<br />camera. We run<br />
           <span class="editorial">the machine</span><span class="accent-pink">.</span>
         </h1>
@@ -38,14 +40,26 @@ import { site, services, results, differences, proofPoints, testimonials, proces
         </div>
       </div>
 
-      <div class="hero__side">
+      <!-- Two frames, offset. One picture reads as a headshot; two read as a shoot. -->
+      <div class="hero__cluster">
         <Portrait
+          class="hero__shot hero__shot--main"
           src="/images/amy-hero.jpg"
           alt={`${site.founder}, founder of ${site.name}`}
           caption={`${site.founder} · founder`}
           ratio="4 / 5"
           seed={1}
           loading="eager"
+          reveal={false}
+        />
+        <Portrait
+          class="hero__shot hero__shot--inset"
+          src="/images/amy-working.jpg"
+          alt="Behind a KindaSocial batch day"
+          ratio="1 / 1"
+          seed={4}
+          loading="eager"
+          reveal={false}
         />
       </div>
     </div>
@@ -78,7 +92,7 @@ import { site, services, results, differences, proofPoints, testimonials, proces
     </div>
   </section>
 
-  <Marquee items={proofPoints} />
+  <FeaturedIn />
 
   <!-- ============================================ the problem -->
   <section class="section problem">
@@ -89,7 +103,7 @@ import { site, services, results, differences, proofPoints, testimonials, proces
       </aside>
 
       <div class="rail__main">
-        <h2 class="h2 problem__title" data-reveal>
+        <h2 class="h2 problem__title" data-reveal="text">
           Everyone in your niche sounds identical. That is not a content problem, it is a
           <span class="editorial accent-pink">positioning</span> one.
         </h2>
@@ -121,6 +135,8 @@ import { site, services, results, differences, proofPoints, testimonials, proces
       </div>
     </div>
   </section>
+
+  <Marquee items={proofPoints} />
 
   <!-- ============================================ services -->
   <section class="section on-pearl services" id="what-we-do">
@@ -156,11 +172,44 @@ import { site, services, results, differences, proofPoints, testimonials, proces
     </div>
   </section>
 
+  <!-- ============================================ the work -->
+  <section class="section work">
+    <div class="shell">
+      <SectionHead
+        index="03"
+        label="The work"
+        title="One system, four jobs."
+        aside="Every asset comes off the same template set, so an account looks like one brand rather than twelve moods. These are the live templates, not screenshots of them."
+      />
+
+      <div
+        class="work__grid"
+        tabindex="0"
+        role="group"
+        aria-label="Social post templates">
+        {
+          workTiles.map((t) => (
+            <div class="work__cell" data-reveal="media">
+              <SocialTile kind={t.kind} eyebrow={t.eyebrow} headline={t.headline} foot={t.foot} />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="work__foot" data-reveal>
+        <a class="link" href="/services#06">
+          How the brand system gets built
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============================================ proof -->
   <section class="section proof">
     <div class="shell">
       <SectionHead
-        index="03"
+        index="04"
         label="Proof"
         title="Receipts, not adjectives."
         aside="Two accounts, the same method. The mechanism is in the write-up, not just the screenshot."
@@ -202,35 +251,45 @@ import { site, services, results, differences, proofPoints, testimonials, proces
 
   <!-- ============================================ how it works -->
   <section class="section how">
-    <div class="shell rail">
-      <aside class="rail__aside">
-        <span class="label" data-reveal>How it works</span>
-        <span class="index" data-reveal>/ 0 4</span>
-        <p class="body how__aside" data-reveal>
-          Five steps, and you are only needed for two of them.
-        </p>
-      </aside>
+    <div class="shell how__grid">
+      <div class="how__media">
+        <Portrait
+          src="/images/batch-day.jpg"
+          alt="A KindaSocial batch day in progress"
+          caption="Batch day · one session covers the month"
+          ratio="3 / 4"
+          seed={2}
+        />
+      </div>
 
-      <ol class="steps">
-        {
-          process.map((p) => (
-            <li class="step" data-reveal>
-              <div class="step__rail" aria-hidden="true">
-                <span class="step__dot" />
-              </div>
-              <div class="step__body">
-                <div class="step__head">
-                  <h3 class="h4">
-                    <span class="index step__n">{p.n}</span> {p.title}
-                  </h3>
-                  <span class="label label--bare step__when">{p.duration}</span>
+      <div class="how__body">
+        <SectionHead
+          index="05"
+          label="How it works"
+          title="Five steps. You are needed for two."
+        />
+
+        <ol class="steps">
+          {
+            process.map((p) => (
+              <li class="step" data-reveal>
+                <div class="step__rail" aria-hidden="true">
+                  <span class="step__dot" />
                 </div>
-                <p class="body">{p.body}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
+                <div class="step__body">
+                  <div class="step__head">
+                    <h3 class="h4">
+                      <span class="index step__n">{p.n}</span> {p.title}
+                    </h3>
+                    <span class="label label--bare step__when">{p.duration}</span>
+                  </div>
+                  <p class="body">{p.body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -238,7 +297,7 @@ import { site, services, results, differences, proofPoints, testimonials, proces
   <section class="section why">
     <div class="shell">
       <SectionHead
-        index="05"
+        index="06"
         label="Why this one"
         title="Sharp where the rest are beige."
         aside="Clients pick the agency that is visibly better at the thing they are hiring for. This is ours."
@@ -261,25 +320,15 @@ import { site, services, results, differences, proofPoints, testimonials, proces
   <!-- ============================================ testimonials -->
   <section class="section on-pearl voices">
     <div class="shell">
-      <SectionHead index="06" label="Client said" title="The line we hear most." />
-
-      <div class="voices__grid">
-        {
-          testimonials.map((t, i) => (
-            <figure class="voice" data-reveal>
-              <div class="voice__mark" aria-hidden="true">
-                <Monogram size={20} tone="muted" />
-              </div>
-              <blockquote class="voice__quote h3">“{t.quote}”</blockquote>
-              <figcaption class="voice__by label">
-                {t.attribution} · {t.role}
-              </figcaption>
-              <span class="visually-hidden">Testimonial {i + 1}</span>
-            </figure>
-          ))
-        }
-      </div>
+      <SectionHead
+        index="07"
+        label="Client said"
+        title="The line we hear most."
+        aside="Hover to hold one still."
+      />
     </div>
+
+    <TestimonialRail tone="pearl" />
   </section>
 
   <CtaBand
@@ -294,7 +343,7 @@ import { site, services, results, differences, proofPoints, testimonials, proces
   /* ---------- hero ---------- */
   .hero {
     position: relative;
-    padding-top: clamp(3rem, 2rem + 6vw, 6rem);
+    padding-top: clamp(2.5rem, 2rem + 5vw, 5rem);
     padding-bottom: clamp(3rem, 2rem + 4vw, 5rem);
     overflow: hidden;
   }
@@ -308,14 +357,15 @@ import { site, services, results, differences, proofPoints, testimonials, proces
 
   @media (min-width: 62rem) {
     .hero__inner {
-      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4.4fr);
       align-items: center;
-      gap: clamp(3rem, 6vw, 5.5rem);
+      gap: clamp(2.5rem, 4vw, 4rem);
     }
   }
 
   .hero__title {
     margin-top: 1.5rem;
+    font-size: clamp(2.75rem, 1.5rem + 5.2vw, 5.25rem);
   }
 
   .hero__title .editorial {
@@ -331,19 +381,56 @@ import { site, services, results, differences, proofPoints, testimonials, proces
     margin-top: 2.25rem;
   }
 
-  /* On phones the portrait leads with the copy, not beside it. */
-  .hero__side {
+  /* The cluster: main frame, plus a square inset overlapping its lower-left. */
+  .hero__cluster {
+    position: relative;
+    padding-left: 2.75rem;
+  }
+
+  .hero__cluster :global(.hero__shot--main) {
+    margin-left: auto;
+    width: 100%;
     max-width: 22rem;
   }
 
-  @media (max-width: 61.99rem) {
-    .hero__side {
-      max-width: 15rem;
+  .hero__cluster :global(.hero__shot--inset) {
+    position: absolute;
+    left: 0;
+    /* Sits against the lower third of the main frame, clear of its caption. */
+    bottom: 3.25rem;
+    width: 46%;
+    max-width: 9.5rem;
+  }
+
+  .hero__cluster :global(.hero__shot--inset .portrait__frame) {
+    border-color: var(--line-strong);
+    box-shadow: 0 24px 60px -20px rgb(7 13 29 / 0.9);
+  }
+
+  /* Phones get one frame. Two overlapping at 390px is a puzzle, not a layout. */
+  @media (max-width: 47.99rem) {
+    .hero__cluster {
+      padding: 0;
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-end;
+    }
+
+    .hero__cluster :global(.hero__shot--main) {
+      max-width: 62%;
+      margin-left: 0;
+    }
+
+    .hero__cluster :global(.hero__shot--inset) {
+      position: static;
+      width: auto;
+      flex: 1;
+      max-width: none;
     }
   }
 
   .stats {
-    margin-top: clamp(3.5rem, 7vw, 6rem);
+    margin-top: clamp(3rem, 6vw, 5rem);
     padding-top: 2rem;
     border-top: 1px solid var(--line);
     display: grid;
@@ -444,6 +531,59 @@ import { site, services, results, differences, proofPoints, testimonials, proces
     margin-top: 2.5rem;
   }
 
+  /* ---------- the work ---------- */
+  /*
+   * Below the four-up breakpoint these become a snap rail rather than a grid.
+   * A 1:1 tile in a 2-up grid at phone width is ~165px, which is not enough
+   * room for the headline it has to carry — the type clips. Swiping through
+   * them full-size is also how these get looked at in the first place.
+   */
+  .work__grid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    /* Bleed to the screen edges so a tile is visibly cut off, cueing the swipe. */
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .work__grid > .work__cell {
+    flex: 0 0 auto;
+    width: min(19rem, 68vw);
+    scroll-snap-align: start;
+  }
+
+  .work__grid:focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 4px;
+    border-radius: var(--radius);
+  }
+
+  @media (min-width: 62rem) {
+    .work__grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.25rem;
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+      padding-bottom: 0;
+    }
+
+    .work__grid > .work__cell {
+      width: auto;
+    }
+  }
+
+  .work__foot {
+    margin-top: 2.5rem;
+  }
+
   /* ---------- proof ---------- */
   .cases {
     display: grid;
@@ -514,10 +654,26 @@ import { site, services, results, differences, proofPoints, testimonials, proces
   }
 
   /* ---------- how ---------- */
-  .how__aside {
-    margin-top: 1rem;
-    font-size: var(--t-small);
-    max-width: 24ch;
+  .how__grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  @media (min-width: 62rem) {
+    .how__grid {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      gap: clamp(3rem, 6vw, 5rem);
+      align-items: start;
+    }
+
+    .how__media {
+      position: sticky;
+      top: 8rem;
+    }
+  }
+
+  .how__media {
+    max-width: 24rem;
   }
 
   .steps {
@@ -622,45 +778,8 @@ import { site, services, results, differences, proofPoints, testimonials, proces
   }
 
   /* ---------- voices ---------- */
-  .voices__grid {
-    display: grid;
-    gap: 1.25rem;
-  }
-
-  @media (min-width: 56rem) {
-    .voices__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  .voice {
-    position: relative;
-    margin: 0;
-    padding: clamp(1.5rem, 3vw, 2rem);
-    background: #fff;
-    border: 1px solid var(--line-dark);
-    border-radius: var(--radius-lg);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .voice__mark {
-    position: absolute;
-    top: clamp(1.5rem, 3vw, 2rem);
-    right: clamp(1.5rem, 3vw, 2rem);
-  }
-
-  .voice__quote {
-    margin-top: 2rem;
-    font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    flex: 1;
-  }
-
-  .voice__by {
-    margin-top: 1.75rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--line-dark);
+  /* The rail runs full-bleed; only its heading sits in the shell. */
+  .voices {
+    overflow: hidden;
   }
 </style>

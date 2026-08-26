@@ -64,7 +64,7 @@ const principles = [
 
       <div class="founder__body">
         <span class="label" data-reveal>The founder</span>
-        <h2 class="h2 founder__title" data-reveal>{site.founder}</h2>
+        <h2 class="h2 founder__title" data-reveal="text">{site.founder}</h2>
 
         <p class="lead founder__lede" data-reveal>
           A young entrepreneur with a sharp eye for what works online, and a low tolerance for
@@ -105,6 +105,39 @@ const principles = [
     </div>
   </section>
 
+  <!-- ============================================ studio strip -->
+  <section class="section--tight strip">
+    <div class="shell">
+      <div class="strip__head">
+        <span class="label" data-reveal>The studio</span>
+        <span class="index" data-reveal>/ 0 2</span>
+      </div>
+      <div class="strip__grid">
+        <Portrait
+          src="/images/studio-01.jpg"
+          alt="Filming a batch day"
+          caption="Batch day"
+          ratio="4 / 5"
+          seed={3}
+        />
+        <Portrait
+          src="/images/studio-02.jpg"
+          alt="Reviewing the month's numbers"
+          caption="The monthly read-out"
+          ratio="4 / 5"
+          seed={5}
+        />
+        <Portrait
+          src="/images/studio-03.jpg"
+          alt="Working the inbox"
+          caption="Where the revenue is"
+          ratio="4 / 5"
+          seed={6}
+        />
+      </div>
+    </div>
+  </section>
+
   <!-- ============================================ pull quote -->
   <section class="section--tight pull">
     <div class="shell">
@@ -127,7 +160,7 @@ const principles = [
   <section class="section on-pearl eco">
     <div class="shell">
       <SectionHead
-        index="02"
+        index="03"
         label="How it fits together"
         title="Two brands. One loop."
         aside="The agency holds the systems, the case studies and the results. The founder holds the trust. Each one feeds the other, which is exactly the structure we build for clients."
@@ -177,7 +210,7 @@ const principles = [
     <div class="shell rail">
       <aside class="rail__aside">
         <span class="label" data-reveal>The standard</span>
-        <span class="index" data-reveal>/ 0 3</span>
+        <span class="index" data-reveal>/ 0 4</span>
         <p class="body standards__aside" data-reveal>
           The test for anything that goes out: would the founder say this out loud, sober, to a
           smart friend?
@@ -203,7 +236,7 @@ const principles = [
   <!-- ============================================ principles -->
   <section class="section section--tight principles">
     <div class="shell">
-      <SectionHead index="04" label="How we operate" title="Four things we hold to." />
+      <SectionHead index="05" label="How we operate" title="Four things we hold to." />
       <dl class="principles__grid">
         {
           principles.map((p) => (
@@ -275,6 +308,38 @@ const principles = [
   .founder__links {
     margin-top: 2.25rem;
     gap: 1.75rem;
+  }
+
+  /* ---------- studio strip ---------- */
+  .strip__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .strip__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 56rem) {
+    .strip__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+  }
+
+  /* Two-up on phones would orphan the third; three narrow frames read fine. */
+  @media (max-width: 34rem) {
+    .strip__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
   }
 
   /* ---------- pull quote ---------- */

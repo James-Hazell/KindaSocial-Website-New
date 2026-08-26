@@ -17,7 +17,7 @@ const { index, label, title, aside, class: className = '' } = Astro.props;
   </div>
 
   <div class="sec-head__body">
-    <h2 class="h2" data-reveal>{title}</h2>
+    <h2 class="h2" data-reveal="text">{title}</h2>
     {aside && <p class="lead sec-head__aside" data-reveal>{aside}</p>}
   </div>
 </header>

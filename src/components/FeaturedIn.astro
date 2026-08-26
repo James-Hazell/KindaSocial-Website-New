@@ -1,0 +1,155 @@
+---
+/**
+ * The credibility banner — a continuous rail of names set as wordmarks.
+ *
+ * Content comes from `featuredIn` in site.ts. See the note there before
+ * swapping in press credits: this is the one claim on the site a prospect
+ * can check, so it only carries things that actually happened.
+ */
+import { featuredIn } from '~/data/site';
+
+interface Props {
+  label?: string;
+  items?: readonly string[];
+  tone?: 'dark' | 'pearl';
+}
+
+const { label = featuredIn.label, items = featuredIn.items, tone = 'dark' } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class:list={['fi', `fi--${tone}`]} aria-label={label}>
+      <div class="shell fi__head">
+        <span class="label" data-reveal>
+          {label}
+        </span>
+        <span class="fi__rule" aria-hidden="true" data-reveal="rule" />
+      </div>
+
+      <div class="fi__rail" tabindex="0" role="group" aria-label={label}>
+        {[0, 1].map((copy) => (
+          <ul class="fi__track" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {items.map((item) => (
+              <li class="fi__item">
+                <span class="fi__name">{item}</span>
+                <span class="fi__dot" aria-hidden="true" />
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .fi {
+    padding-block: clamp(2.25rem, 4vw, 3.25rem);
+    border-block: 1px solid var(--line);
+    background: var(--midnight-sunken);
+    overflow: hidden;
+  }
+
+  .fi--pearl {
+    background: var(--pearl);
+    border-color: var(--line-dark);
+  }
+
+  .fi__head {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .fi__rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .fi--pearl .fi__rule {
+    background: var(--line-dark);
+  }
+
+  .fi__rail {
+    display: flex;
+    width: max-content;
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  }
+
+  .fi__track {
+    display: flex;
+    align-items: center;
+    animation: fi-slide 44s linear infinite;
+  }
+
+  @keyframes fi-slide {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  .fi:hover .fi__track {
+    animation-play-state: paused;
+  }
+
+  .fi__item {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.75rem, 4vw, 3.25rem);
+    padding-right: clamp(1.75rem, 4vw, 3.25rem);
+    flex-shrink: 0;
+  }
+
+  /* Set as a wordmark rather than a logo: real logos would be someone else's
+     trademark, and a row of mismatched PNGs is what cheap sites do here. */
+  .fi__name {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 0.9rem + 0.9vw, 1.625rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    color: var(--chrome);
+    transition: color 320ms var(--ease);
+  }
+
+  .fi--pearl .fi__name {
+    color: var(--ink-muted);
+  }
+
+  .fi__item:hover .fi__name {
+    color: var(--pearl);
+  }
+
+  .fi--pearl .fi__item:hover .fi__name {
+    color: var(--ink);
+  }
+
+  .fi__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--violet);
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fi__rail {
+      width: 100%;
+      overflow-x: auto;
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+
+    .fi__track {
+      animation: none;
+    }
+
+    .fi__track[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>

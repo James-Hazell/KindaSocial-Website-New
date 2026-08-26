@@ -262,7 +262,9 @@ export const proofPoints = [
 ] as const;
 
 /* ------------------------------------------------------------ testimonials */
-/* Placeholder quotes — see CONTENT.md. Swap for real, attributed client words. */
+/* Placeholder quotes — see CONTENT.md. Swap for real, attributed client words.
+   Eight of them because the marquee needs enough to fill two rows without the
+   loop reading as a loop. */
 
 export const testimonials = [
   {
@@ -280,6 +282,92 @@ export const testimonials = [
     quote: 'I stopped checking whether it had been posted. That is the whole thing I was paying for.',
     attribution: 'Client',
     role: 'Online educator · Australia',
+  },
+  {
+    quote:
+      'Three agencies before this one sent me drafts I rewrote myself. I have not rewritten a script since week three.',
+    attribution: 'Client',
+    role: 'Consultant · United Kingdom',
+  },
+  {
+    quote: 'The DMs went from a mess I avoided to the place the work actually comes from.',
+    attribution: 'Client',
+    role: 'Coach · United States',
+  },
+  {
+    quote:
+      'They told me on the call I did not need the biggest package. That is when I knew I was going to sign.',
+    attribution: 'Client',
+    role: 'Founder · Europe',
+  },
+  {
+    quote: 'My retention doubled before my follower count moved. Turns out that was the point.',
+    attribution: 'Client',
+    role: 'Online educator · United Kingdom',
+  },
+  {
+    quote: 'It sounds like me on a good day. I did not think that was buyable.',
+    attribution: 'Client',
+    role: 'Coach · Australia',
+  },
+] as const;
+
+/* ------------------------------------------------------------- featured in */
+/*
+ * The scrolling credibility banner.
+ *
+ * Seeded with the platforms the work actually runs on, because that is
+ * verifiable. To turn this into a press bar, replace `items` with real
+ * publications, podcasts or stages you or your clients have appeared on, and
+ * change `label` to "As featured in". Do not list anything that has not
+ * actually happened — it is the one claim on the site a prospect can check.
+ */
+
+export const featuredIn = {
+  label: 'Where the work runs',
+  items: [
+    'Instagram',
+    'TikTok',
+    'LinkedIn',
+    'YouTube Shorts',
+    'Meta Ads',
+    'Facebook',
+    'Email',
+    'Skool',
+  ],
+} as const;
+
+/* --------------------------------------------------------------- the work */
+/*
+ * Four social tiles built to Brand Guidelines §09 — quote, announcement,
+ * carousel and client-said. These are the templates, rendered live rather than
+ * screenshotted, so they stay on-brand and stay sharp at any size.
+ */
+
+export const workTiles = [
+  {
+    kind: 'quote',
+    eyebrow: 'field notes № 12',
+    headline: 'Your audience doesn’t want more posts. They want better ones.',
+    foot: '',
+  },
+  {
+    kind: 'announcement',
+    eyebrow: 'now booking q3',
+    headline: 'Two creator slots open for Q3.',
+    foot: 'apply at the link in bio →',
+  },
+  {
+    kind: 'carousel',
+    eyebrow: 'carousel · 1 / 7 → swipe',
+    headline: '7 things personal brands get wrong about content.',
+    foot: 'A short read on what works in 2026.',
+  },
+  {
+    kind: 'said',
+    eyebrow: 'client said',
+    headline: '“They run the whole back end of my brand. I just show up and make stuff.”',
+    foot: '— a creator we work with',
   },
 ] as const;
 

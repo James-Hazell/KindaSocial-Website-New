@@ -4,7 +4,10 @@ import PageHero from '~/components/PageHero.astro';
 import SectionHead from '~/components/SectionHead.astro';
 import CtaBand from '~/components/CtaBand.astro';
 import Monogram from '~/components/Monogram.astro';
-import { results, testimonials } from '~/data/site';
+import Portrait from '~/components/Portrait.astro';
+import TestimonialRail from '~/components/TestimonialRail.astro';
+import FeaturedIn from '~/components/FeaturedIn.astro';
+import { results } from '~/data/site';
 
 const measures = [
   {
@@ -68,7 +71,7 @@ const measures = [
 
           <div class="case__grid">
             <div class="case__left">
-              <h2 class="h2 case__client" data-reveal>
+              <h2 class="h2 case__client" data-reveal="text">
                 {r.client}
               </h2>
               <p class="lead case__summary" data-reveal>
@@ -84,6 +87,15 @@ const measures = [
                 ))}
               </ul>
             </div>
+
+            <div class="case__aside">
+            <Portrait
+              class="case__shot"
+              src={`/images/case-${r.n}.jpg`}
+              alt={`${r.client} — content from the engagement`}
+              ratio="4 / 3"
+              seed={i === 0 ? 3 : 6}
+            />
 
             <aside class="case__panel" data-reveal>
               <div class="panel__mark" aria-hidden="true">
@@ -111,11 +123,14 @@ const measures = [
                 </div>
               </dl>
             </aside>
+            </div>
           </div>
         </div>
       </section>
     ))
   }
+
+  <FeaturedIn tone="dark" />
 
   <!-- ============================================ what we measure -->
   <section class="section measure">
@@ -147,20 +162,15 @@ const measures = [
   <!-- ============================================ voices -->
   <section class="section on-pearl voices">
     <div class="shell">
-      <SectionHead index="04" label="Client said" title="In their words." />
-      <div class="voices__grid">
-        {
-          testimonials.map((t) => (
-            <figure class="voice" data-reveal>
-              <blockquote class="voice__quote h3">“{t.quote}”</blockquote>
-              <figcaption class="voice__by label">
-                {t.attribution} · {t.role}
-              </figcaption>
-            </figure>
-          ))
-        }
-      </div>
+      <SectionHead
+        index="04"
+        label="Client said"
+        title="In their words."
+        aside="Hover to hold one still."
+      />
     </div>
+
+    <TestimonialRail tone="pearl" />
   </section>
 
   <CtaBand
@@ -349,6 +359,16 @@ const measures = [
 
   .measure__body {
     font-size: var(--t-small);
+  }
+
+  .case__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .voices {
+    overflow: hidden;
   }
 
   /* voices */

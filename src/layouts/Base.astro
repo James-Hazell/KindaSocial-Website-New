@@ -4,6 +4,7 @@ import '@fontsource-variable/inter';
 import '@fontsource/instrument-serif/400-italic.css';
 import '~/styles/global.css';
 
+import TopBar from '~/components/TopBar.astro';
 import Nav from '~/components/Nav.astro';
 import Footer from '~/components/Footer.astro';
 import { site } from '~/data/site';
@@ -78,6 +79,7 @@ const orgSchema = {
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="grain" aria-hidden="true"></div>
+    <TopBar />
     <Nav />
     <main id="main">
       <slot />
@@ -85,13 +87,26 @@ const orgSchema = {
     <Footer />
 
     <script>
-      // Whisper-level reveal. Nothing moves more than 16px, nothing bounces.
+      // Whisper-level reveal. Nothing moves more than 12px, nothing bounces.
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
 
       if (prefersReduced || !('IntersectionObserver' in window)) {
         targets.forEach((el) => el.classList.add('is-in'));
       } else {
+        // Stagger is counted per section, not across the document. A global index
+        // means the tenth section starts mid-sequence and the last items sit
+        // waiting out a delay they did nothing to earn.
+        const seen = new Map<Element, number>();
+
+        targets.forEach((el) => {
+          if (el.style.getPropertyValue('--reveal-delay')) return;
+          const group = el.closest('section, footer, header') ?? document.body;
+          const i = seen.get(group) ?? 0;
+          seen.set(group, i + 1);
+          el.style.setProperty('--reveal-delay', `${Math.min(i, 7) * 70}ms`);
+        });
+
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -100,16 +115,10 @@ const orgSchema = {
               io.unobserve(entry.target);
             });
           },
-          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.06 },
         );
 
-        targets.forEach((el, i) => {
-          // Stagger only within a group, so long pages never queue up a wait.
-          if (!el.style.getPropertyValue('--reveal-delay')) {
-            el.style.setProperty('--reveal-delay', `${(i % 6) * 65}ms`);
-          }
-          io.observe(el);
-        });
+        targets.forEach((el) => io.observe(el));
       }
     </script>
   </body>
