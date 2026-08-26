@@ -1,0 +1,330 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHero from '~/components/PageHero.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Faq from '~/components/Faq.astro';
+import { services, process, faqs } from '~/data/site';
+
+const notIncluded = [
+  'Follower counts bought, boosted or otherwise faked',
+  'Engagement pods and comment rings',
+  'Scripts written by a model and sent to you unread',
+  'Twelve-month lock-ins that outlive the results',
+  'Reports built out of impressions and reach',
+];
+
+const forWhom = [
+  { k: 'Coaches and consultants', v: 'Selling expertise at £2k and up, where trust does the closing.' },
+  { k: 'Founders with a face', v: 'The company grows faster when the person in front of it does.' },
+  { k: 'Online educators', v: 'Courses, cohorts and memberships that live or die on authority.' },
+  { k: 'Not a fit', v: 'Anyone wanting a posting service, or unwilling to be on camera.' },
+];
+---
+
+<Base
+  title="Services"
+  description="Strategy, content production, distribution, community ops, paid amplification and brand systems — the full back office for a personal brand.">
+  <PageHero
+    index="01"
+    label="Services"
+    title="Six jobs. <em>One machine.</em>"
+    lede="Most agencies sell you a piece of this and leave the rest on your desk. The parts only work connected — strategy tells production what to make, production feeds distribution, distribution fills the inbox, and the inbox rewrites next month's strategy."
+    meta={[
+      { k: 'Engagement', v: 'Rolling monthly retainer' },
+      { k: 'Volume', v: '12–24 pieces per month' },
+      { k: 'Your time', v: 'One filming day, one call' },
+      { k: 'First output', v: 'Live in week three' },
+    ]}
+  />
+
+  <!-- ============================================ the six -->
+  <section class="section detail">
+    <div class="shell">
+      {
+        services.map((s, i) => (
+          <article class="svc" id={s.n}>
+            <div class="svc__index" data-reveal>
+              <span class="index">/ {s.n.split('').join(' ')}</span>
+            </div>
+
+            <div class="svc__main">
+              <h2 class="h2 svc__title" data-reveal>
+                {s.title}
+              </h2>
+              <p class="lead svc__lede" data-reveal>
+                {s.lede}
+              </p>
+              <p class="body svc__body" data-reveal>
+                {s.body}
+              </p>
+            </div>
+
+            <div class="svc__aside" data-reveal>
+              <span class="label">What lands</span>
+              <ul class="deliverables">
+                {s.deliverables.map((d) => (
+                  <li class="deliverable">{d}</li>
+                ))}
+              </ul>
+            </div>
+
+            {i < services.length - 1 && <hr class="rule svc__rule" data-reveal="rule" />}
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ============================================ process -->
+  <section class="section on-pearl proc">
+    <div class="shell">
+      <SectionHead
+        index="02"
+        label="The engagement"
+        title="What the first ninety days look like."
+        aside="Nothing gets published in the first two weeks. That is deliberate — it is the part that stops the content sounding like an agency wrote it."
+      />
+
+      <ol class="proc__grid">
+        {
+          process.map((p) => (
+            <li class="proc__item" data-reveal>
+              <div class="proc__head">
+                <span class="index">{p.n}</span>
+                <span class="label label--bare">{p.duration}</span>
+              </div>
+              <h3 class="h4 proc__title">{p.title}</h3>
+              <p class="body proc__body">{p.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================ fit -->
+  <section class="section fit">
+    <div class="shell fit__grid">
+      <div class="fit__col">
+        <SectionHead index="03" label="Who this is for" title="A short list, on purpose." />
+        <dl class="fit__list">
+          {
+            forWhom.map((f) => (
+              <div class="fit__row" data-reveal>
+                <dt class="h4">{f.k}</dt>
+                <dd class="body">{f.v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <div class="fit__col">
+        <SectionHead index="04" label="What you will not get" title="Stated plainly." />
+        <ul class="nots">
+          {
+            notIncluded.map((n) => (
+              <li class="not" data-reveal>
+                <span class="not__x" aria-hidden="true">
+                  ✕
+                </span>
+                <span>{n}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ faq -->
+  <section class="section section--tight">
+    <div class="shell rail">
+      <aside class="rail__aside">
+        <span class="label" data-reveal>Questions</span>
+        <span class="index" data-reveal>/ 0 5</span>
+      </aside>
+      <div class="rail__main">
+        <Faq items={faqs.slice(0, 5)} />
+        <p class="small muted faq__more" data-reveal>
+          More of them on the <a class="link" href="/pricing#faq">pricing page</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title="Bring us the expertise.<br />We will bring <em>the rest</em>."
+    body="Thirty minutes, no deck. We look at your audience, your offer and what has already been tried."
+    secondary={{ label: 'See pricing', href: '/pricing' }}
+  />
+</Base>
+
+<style>
+  .svc {
+    display: grid;
+    gap: 1.5rem;
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .svc:first-child {
+    padding-top: 0;
+  }
+
+  @media (min-width: 62rem) {
+    .svc {
+      grid-template-columns: 5rem minmax(0, 6fr) minmax(0, 4fr);
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: start;
+    }
+  }
+
+  .svc__title {
+    max-width: 16ch;
+  }
+
+  .svc__lede {
+    margin-top: 1rem;
+    color: var(--pearl);
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    max-width: 34ch;
+  }
+
+  .svc__body {
+    margin-top: 1.25rem;
+    font-size: var(--t-small);
+  }
+
+  .svc__aside .label {
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .deliverables {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .deliverable {
+    font-size: var(--t-small);
+    color: var(--chrome);
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .deliverable::before {
+    content: '';
+    flex-shrink: 0;
+    width: 5px;
+    height: 5px;
+    margin-top: 0.62em;
+    border-radius: 50%;
+    background: var(--violet);
+  }
+
+  .svc__rule {
+    grid-column: 1 / -1;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  /* ---------- process ---------- */
+  .proc__grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 48rem) {
+    .proc__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .proc__grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0;
+    }
+  }
+
+  .proc__item {
+    padding: 1.5rem 0 0;
+    border-top: 1px solid var(--line-dark);
+  }
+
+  @media (min-width: 72rem) {
+    .proc__item {
+      padding: 1.5rem 1.5rem 0 0;
+    }
+  }
+
+  .proc__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  .proc__title {
+    margin-top: 1.5rem;
+  }
+
+  .proc__body {
+    margin-top: 0.7rem;
+    font-size: var(--t-small);
+  }
+
+  /* ---------- fit ---------- */
+  .fit__grid {
+    display: grid;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+
+  @media (min-width: 62rem) {
+    .fit__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+
+  .fit__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .fit__row {
+    padding-block: 1.35rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fit__row dd {
+    margin: 0.5rem 0 0;
+    font-size: var(--t-small);
+  }
+
+  .nots {
+    border-top: 1px solid var(--line);
+  }
+
+  .not {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 1.35rem;
+    border-bottom: 1px solid var(--line);
+    font-size: var(--t-small);
+    color: var(--chrome);
+  }
+
+  .not__x {
+    color: var(--pink);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .faq__more {
+    margin-top: 2rem;
+  }
+</style>

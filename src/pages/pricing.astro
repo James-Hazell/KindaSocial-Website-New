@@ -1,0 +1,608 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHero from '~/components/PageHero.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Faq from '~/components/Faq.astro';
+import Monogram from '~/components/Monogram.astro';
+import { packages, addOns, club, faqs } from '~/data/site';
+
+const compare = [
+  { row: 'Short-form pieces per month', lite: '12', growth: '24', premium: '24' },
+  { row: 'Positioning and pillar strategy', lite: true, growth: true, premium: true },
+  { row: 'Scripts, editing and captions', lite: true, growth: true, premium: true },
+  { row: 'Platforms distributed to', lite: 'Two', growth: 'Three', premium: 'Three + LinkedIn' },
+  { row: 'Comment and DM management', lite: false, growth: true, premium: true },
+  { row: 'Hook and retention testing', lite: false, growth: true, premium: true },
+  { row: 'LinkedIn authority programme', lite: false, growth: false, premium: true },
+  { row: 'Long-form written posts', lite: false, growth: false, premium: true },
+  { row: 'Qualified-conversation handover', lite: false, growth: false, premium: true },
+  { row: 'Strategy calls', lite: 'Monthly', growth: 'Fortnightly', premium: 'Weekly' },
+];
+
+const cell = (v: string | boolean) => (v === true ? '✓' : v === false ? '—' : v);
+---
+
+<Base
+  title="Pricing"
+  description="Three retainers from $1,900 to $3,900 a month, plus add-ons and the KindaSocial Club membership from $49. Rolling agreements, no twelve-month lock-in.">
+  <PageHero
+    index="04"
+    label="Pricing"
+    title="Three retainers.<br /><em>Stated plainly.</em>"
+    lede="Rolling monthly agreements, not twelve-month lock-ins. Prices are per month in US dollars and exclude media spend. If the work stops earning the retainer, you should be able to leave — so you can."
+    meta={[
+      { k: 'Entry', v: '$1,900 per month' },
+      { k: 'Most taken', v: 'Growth · $3,150' },
+      { k: 'Commitment', v: 'Rolling, monthly' },
+      { k: 'Membership', v: 'From $49 per month' },
+    ]}
+  />
+
+  <!-- ============================================ packages -->
+  <section class="section packs">
+    <div class="shell">
+      <div class="packs__grid">
+        {
+          packages.map((p) => (
+            <article class:list={['pack', p.featured && 'pack--featured']} data-reveal>
+              {p.featured && <span class="pack__flag label label--bare">Most taken</span>}
+
+              <div class="pack__head">
+                <h2 class="h3 pack__name">{p.name}</h2>
+                <p class="pack__for">{p.for}</p>
+              </div>
+
+              <p class="pack__price">
+                <span class="pack__figure tnum">{p.price}</span>
+                <span class="pack__cadence label label--bare">{p.cadence}</span>
+              </p>
+
+              <p class="pack__volume label label--bare">{p.volume}</p>
+
+              <ul class="pack__list">
+                {p.features.map((f) => (
+                  <li>
+                    <span class="pack__tick" aria-hidden="true">
+                      ✓
+                    </span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                class:list={['btn', 'pack__cta', p.featured ? 'btn--violet' : 'btn--ghost']}
+                href="/contact">
+                Apply for {p.name}
+                <span class="btn__arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="small muted packs__note" data-reveal>
+        All retainers include the two-week positioning sprint before anything is published. Media
+        spend for paid amplification is billed separately and paid direct to the platform.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================ comparison -->
+  <section class="section on-pearl compare">
+    <div class="shell">
+      <SectionHead
+        index="02"
+        label="Side by side"
+        title="What changes between them."
+        aside="The jump from Lite to Growth is volume plus the inbox. The jump to Premium is LinkedIn and the written long-form that comes with it."
+      />
+
+      <!-- Phone: one block per row. A four-column table at 390px is a table nobody reads. -->
+      <ul class="stacked" data-reveal>
+        {
+          compare.map((c) => (
+            <li class="stacked__row">
+              <p class="stacked__label">{c.row}</p>
+              <dl class="stacked__vals">
+                {(
+                  [
+                    ['Lite', c.lite],
+                    ['Growth', c.growth],
+                    ['Premium', c.premium],
+                  ] as const
+                ).map(([plan, val]) => (
+                  <div class:list={['stacked__val', val === false && 'is-off']}>
+                    <dt>{plan}</dt>
+                    <dd>{cell(val)}</dd>
+                  </div>
+                ))}
+              </dl>
+            </li>
+          ))
+        }
+        <li class="stacked__row stacked__row--price">
+          <p class="stacked__label">Per month</p>
+          <dl class="stacked__vals">
+            {
+              packages.map((p) => (
+                <div class="stacked__val">
+                  <dt>{p.name}</dt>
+                  <dd>{p.price}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </li>
+      </ul>
+
+      <div class="compare__scroll" data-reveal>
+        <table class="compare__table">
+          <caption class="visually-hidden">Retainer comparison across Lite, Growth and Premium</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="compare__rowhead">Included</th>
+              <th scope="col">Lite</th>
+              <th scope="col" class="is-featured">Growth</th>
+              <th scope="col">Premium</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              compare.map((c) => (
+                <tr>
+                  <th scope="row" class="compare__rowhead">
+                    {c.row}
+                  </th>
+                  <td class:list={[c.lite === false && 'is-off']}>{cell(c.lite)}</td>
+                  <td class:list={['is-featured', c.growth === false && 'is-off']}>{cell(c.growth)}</td>
+                  <td class:list={[c.premium === false && 'is-off']}>{cell(c.premium)}</td>
+                </tr>
+              ))
+            }
+            <tr class="compare__price-row">
+              <th scope="row" class="compare__rowhead">Per month</th>
+              {packages.map((p) => <td class:list={[p.featured && 'is-featured']}>{p.price}</td>)}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ add-ons -->
+  <section class="section addons">
+    <div class="shell rail">
+      <aside class="rail__aside">
+        <span class="label" data-reveal>Add-ons</span>
+        <span class="index" data-reveal>/ 0 3</span>
+        <p class="body addons__aside" data-reveal>
+          Bolted onto Growth and Premium once the organic engine is running. Not before.
+        </p>
+      </aside>
+
+      <div class="rail__main">
+        <ul class="rows">
+          {
+            addOns.map((a, i) => (
+              <li class="row addon" data-reveal>
+                <span class="index">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="h4">{a.name}</h3>
+                <p class="body addon__note">{a.note}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="small muted addons__foot" data-reveal>
+          Add-on pricing is quoted per engagement, because the scope genuinely varies. We will put a
+          number on it on the call rather than after it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ club -->
+  <section class="section section--tight club">
+    <div class="shell">
+      <div class="club__inner" data-reveal>
+        <div class="club__mark" aria-hidden="true"><Monogram size={26} tone="pearl" /></div>
+
+        <div class="club__body">
+          <span class="label label--pink">Not ready for a retainer</span>
+          <h2 class="h2 club__title">{club.name}</h2>
+          <p class="lead club__lede">{club.lede}</p>
+          <p class="body club__text">{club.body}</p>
+        </div>
+
+        <div class="club__panel">
+          <p class="club__price">
+            <span class="pack__figure tnum">{club.price}</span>
+            <span class="label label--bare">{club.cadence}</span>
+          </p>
+          <ul class="club__list">
+            {
+              club.features.map((f) => (
+                <li>
+                  <span class="pack__tick" aria-hidden="true">
+                    ✓
+                  </span>
+                  <span>{f}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <a class="btn btn--ghost club__cta" href="/contact?interest=club">
+            Join the waitlist
+            <span class="btn__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ faq -->
+  <section class="section" id="faq">
+    <div class="shell rail">
+      <aside class="rail__aside">
+        <span class="label" data-reveal>Questions</span>
+        <span class="index" data-reveal>/ 0 5</span>
+        <p class="body addons__aside" data-reveal>
+          The ones that come up on almost every call, answered before it.
+        </p>
+      </aside>
+      <div class="rail__main">
+        <Faq items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title="Not sure which one?<br />That is what <em>the call is for.</em>"
+    body="Most people arrive thinking they need Premium and leave on Growth. We would rather size it right than sell it big."
+    secondary={{ label: 'What we actually do', href: '/services' }}
+  />
+</Base>
+
+<style>
+  /* ---------- packages ---------- */
+  .packs__grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 62rem) {
+    .packs__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+    }
+  }
+
+  .pack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--midnight-raised);
+  }
+
+  .pack--featured {
+    border-color: rgb(110 60 255 / 0.55);
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgb(110 60 255 / 0.2) 0%, rgb(110 60 255 / 0) 62%),
+      var(--midnight-raised);
+  }
+
+  .pack__flag {
+    position: absolute;
+    top: -0.6rem;
+    left: clamp(1.75rem, 3.5vw, 2.5rem);
+    padding: 0.3rem 0.65rem;
+    background: var(--violet);
+    color: #fff;
+    border-radius: 100px;
+    font-size: 0.625rem;
+  }
+
+  .pack__name {
+    font-family: var(--font-display);
+  }
+
+  .pack__for {
+    margin-top: 0.6rem;
+    font-size: var(--t-small);
+    color: var(--chrome);
+    max-width: 30ch;
+    min-height: 3.1em;
+  }
+
+  .pack__price {
+    margin-top: 1.75rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .pack__figure {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2.5rem, 1.8rem + 2.4vw, 3.25rem);
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .pack__volume {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    color: var(--pink);
+  }
+
+  .pack__list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .pack__list li,
+  .club__list li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    font-size: var(--t-small);
+    color: var(--chrome);
+  }
+
+  .pack__tick {
+    color: var(--violet);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .pack--featured .pack__tick {
+    color: #a98bff;
+  }
+
+  .pack__cta {
+    margin-top: 2rem;
+    justify-content: center;
+  }
+
+  .packs__note {
+    margin-top: 2rem;
+    max-width: 62ch;
+  }
+
+  /* ---------- comparison ---------- */
+
+  /* Phone layout: stacked blocks. Swaps to the table at 52rem, where it fits. */
+  .stacked {
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .stacked__row {
+    padding: 1.15rem 1.25rem;
+    border-bottom: 1px solid var(--line-dark);
+  }
+
+  .stacked__row:last-child {
+    border-bottom: 0;
+  }
+
+  .stacked__label {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .stacked__vals {
+    margin-top: 0.85rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .stacked__val {
+    padding: 0.55rem 0.6rem;
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+
+  .stacked__val dt {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .stacked__val dd {
+    margin: 0.3rem 0 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .stacked__val.is-off dd {
+    color: var(--ink-muted);
+  }
+
+  .stacked__row--price .stacked__val {
+    background: rgb(110 60 255 / 0.06);
+    border-color: rgb(110 60 255 / 0.24);
+  }
+
+  .stacked__row--price .stacked__val dd {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  .compare__scroll {
+    display: none;
+    overflow-x: auto;
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (min-width: 52rem) {
+    .stacked {
+      display: none;
+    }
+
+    .compare__scroll {
+      display: block;
+    }
+  }
+
+  .compare__table {
+    width: 100%;
+    min-width: 40rem;
+    border-collapse: collapse;
+    font-size: var(--t-small);
+  }
+
+  .compare__table th,
+  .compare__table td {
+    padding: 0.95rem 1.1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--line-dark);
+    color: var(--ink);
+  }
+
+  .compare__table thead th {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+    background: #fff;
+  }
+
+  .compare__table .compare__rowhead {
+    text-align: left;
+    font-weight: 500;
+    color: var(--ink);
+    min-width: 15rem;
+  }
+
+  .compare__table tbody th {
+    font-weight: 400;
+    color: var(--ink-muted);
+  }
+
+  .compare__table .is-featured {
+    background: rgb(110 60 255 / 0.05);
+  }
+
+  .compare__table .is-off {
+    color: var(--chrome);
+  }
+
+  .compare__price-row th,
+  .compare__price-row td {
+    border-bottom: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.0625rem;
+    letter-spacing: -0.02em;
+  }
+
+  /* ---------- add-ons ---------- */
+  .addons__aside {
+    margin-top: 1rem;
+    font-size: var(--t-small);
+    max-width: 26ch;
+  }
+
+  .addon__note {
+    font-size: var(--t-small);
+  }
+
+  .addons__foot {
+    margin-top: 1.75rem;
+    max-width: 56ch;
+  }
+
+  /* ---------- club ---------- */
+  .club__inner {
+    position: relative;
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    padding: clamp(1.75rem, 4vw, 3.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(150deg, var(--midnight-raised) 0%, var(--midnight-sunken) 100%);
+  }
+
+  @media (min-width: 62rem) {
+    .club__inner {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: start;
+    }
+  }
+
+  .club__mark {
+    position: absolute;
+    top: clamp(1.75rem, 4vw, 3.5rem);
+    right: clamp(1.75rem, 4vw, 3.5rem);
+    opacity: 0.35;
+  }
+
+  .club__title {
+    margin-top: 0.85rem;
+  }
+
+  .club__lede {
+    margin-top: 1rem;
+    max-width: 40ch;
+  }
+
+  .club__text {
+    margin-top: 1.25rem;
+    font-size: var(--t-small);
+    max-width: 56ch;
+  }
+
+  .club__panel {
+    padding: clamp(1.5rem, 3vw, 2rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: rgb(10 18 40 / 0.6);
+  }
+
+  .club__price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .club__list {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .club__cta {
+    margin-top: 1.75rem;
+    width: 100%;
+    justify-content: center;
+  }
+</style>

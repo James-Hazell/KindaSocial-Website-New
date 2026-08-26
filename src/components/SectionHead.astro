@@ -1,0 +1,42 @@
+---
+interface Props {
+  index?: string;
+  label: string;
+  title: string;
+  aside?: string;
+  class?: string;
+}
+
+const { index, label, title, aside, class: className = '' } = Astro.props;
+---
+
+<header class:list={['sec-head', className]}>
+  <div class="sec-head__top" data-reveal>
+    <span class="label">{label}</span>
+    {index && <span class="index">/ {index.split('').join(' ')}</span>}
+  </div>
+
+  <div class="sec-head__body">
+    <h2 class="h2" data-reveal>{title}</h2>
+    {aside && <p class="lead sec-head__aside" data-reveal>{aside}</p>}
+  </div>
+</header>
+
+<style>
+  .sec-head__body {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 62rem) {
+    .sec-head__body {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: end;
+    }
+
+    .sec-head__aside {
+      padding-bottom: 0.35rem;
+    }
+  }
+</style>

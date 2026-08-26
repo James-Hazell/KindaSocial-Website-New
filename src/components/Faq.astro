@@ -1,0 +1,136 @@
+---
+interface Props {
+  items: readonly { q: string; a: string }[];
+}
+
+const { items } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((i) => ({
+    '@type': 'Question',
+    name: i.q,
+    acceptedAnswer: { '@type': 'Answer', text: i.a },
+  })),
+};
+---
+
+<div class="faq">
+  {
+    items.map((item, i) => (
+      <details class="faq__item" data-reveal name="faq">
+        <summary class="faq__q">
+          <span class="index faq__n">{String(i + 1).padStart(2, '0')}</span>
+          <span class="faq__text h4">{item.q}</span>
+          <span class="faq__icon" aria-hidden="true">
+            <i />
+            <i />
+          </span>
+        </summary>
+        <div class="faq__a">
+          <p class="body">{item.a}</p>
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
+
+<style>
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+
+  .on-pearl .faq {
+    border-color: var(--line-dark);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .on-pearl .faq__item {
+    border-color: var(--line-dark);
+  }
+
+  .faq__q {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 1rem;
+    padding-block: 1.5rem;
+    cursor: pointer;
+    list-style: none;
+    transition: color 260ms var(--ease);
+  }
+
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .faq__q {
+      gap: 2rem;
+      padding-block: 1.85rem;
+    }
+  }
+
+  .faq__n {
+    padding-top: 0.45rem;
+    letter-spacing: 0.2em;
+  }
+
+  .faq__text {
+    max-width: 44ch;
+  }
+
+  .faq__q:hover .faq__text {
+    color: var(--chrome);
+  }
+
+  .on-pearl .faq__q:hover .faq__text {
+    color: var(--ink-muted);
+  }
+
+  .faq__icon {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .faq__icon i {
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 1.5px;
+    background: var(--chrome);
+    transition: transform 420ms var(--ease);
+  }
+
+  .faq__icon i:last-child {
+    transform: rotate(90deg);
+  }
+
+  .faq__item[open] .faq__icon i:last-child {
+    transform: rotate(0deg);
+  }
+
+  .faq__item[open] .faq__icon i {
+    background: var(--pink);
+  }
+
+  .faq__a {
+    padding-bottom: 1.85rem;
+    padding-left: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .faq__a {
+      padding-left: calc(2rem + 2.5ch);
+      max-width: 62ch;
+    }
+  }
+</style>

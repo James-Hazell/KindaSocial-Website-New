@@ -1,0 +1,98 @@
+---
+interface Props {
+  index: string;
+  label: string;
+  title: string;
+  lede?: string;
+  meta?: { k: string; v: string }[];
+}
+
+const { index, label, title, lede, meta } = Astro.props;
+---
+
+<section class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="shell hero__inner">
+    <div class="hero__top" data-reveal>
+      <span class="label">{label}</span>
+      <span class="index">/ {index.split('').join(' ')}</span>
+    </div>
+
+    <h1 class="hero__title h1" data-reveal set:html={title} />
+
+    {lede && <p class="lead hero__lede" data-reveal>{lede}</p>}
+
+    {
+      meta && (
+        <dl class="hero__meta">
+          {meta.map((m) => (
+            <div class="hero__meta-item" data-reveal>
+              <dt class="label">{m.k}</dt>
+              <dd class="small">{m.v}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-top: clamp(3.5rem, 3rem + 5vw, 7rem);
+    padding-bottom: clamp(3rem, 2.5rem + 4vw, 5.5rem);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .hero__title {
+    max-width: 18ch;
+  }
+
+  .hero__title :global(em) {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--chrome);
+  }
+
+  .hero__lede {
+    margin-top: 1.5rem;
+    max-width: 52ch;
+  }
+
+  .hero__meta {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 48rem) {
+    .hero__meta {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .hero__meta-item dd {
+    margin-top: 0.45rem;
+  }
+</style>

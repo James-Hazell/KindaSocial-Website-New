@@ -1,0 +1,53 @@
+---
+interface Props {
+  items: readonly string[];
+}
+
+const { items } = Astro.props;
+const track = [...items, ...items];
+---
+
+<div class="mq" aria-hidden="true">
+  <div class="marquee">
+    <div class="marquee__track">
+      {
+        track.map((item) => (
+          <span class="mq__item">
+            <span class="mq__dot" />
+            {item}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</div>
+<p class="visually-hidden">{items.join('. ')}.</p>
+
+<style>
+  .mq {
+    padding-block: 1.15rem;
+    border-block: 1px solid var(--line);
+    background: var(--midnight-sunken);
+  }
+
+  .mq__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: var(--t-label);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--chrome);
+  }
+
+  .mq__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--pink);
+    flex-shrink: 0;
+  }
+</style>

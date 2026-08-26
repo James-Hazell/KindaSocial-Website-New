@@ -1,0 +1,369 @@
+---
+import Wordmark from './Wordmark.astro';
+import Monogram from './Monogram.astro';
+import { nav, site } from '~/data/site';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => path === href;
+---
+
+<header class="nav" data-nav>
+  <div class="nav__bar shell">
+    <a class="nav__brand" href="/" aria-label={`${site.name} — home`}>
+      <Wordmark size="1.25rem" />
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      {
+        nav.map((item) => (
+          <a
+            class:list={['nav__link', isCurrent(item.href) && 'is-current']}
+            href={item.href}
+            aria-current={isCurrent(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="nav__end">
+      <a class="btn btn--violet nav__cta" href="/contact">
+        Apply for a slot
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <button
+        class="nav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-panel"
+        data-nav-toggle>
+        <span class="nav__toggle-label" data-nav-label>Menu</span>
+        <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+        <span class="visually-hidden">Toggle navigation</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile panel: designed for the phone, not the desktop menu shrunk down. -->
+  <div class="panel" id="nav-panel" data-nav-panel hidden>
+    <div class="panel__inner shell">
+      <ul class="panel__list">
+        {
+          nav.map((item, i) => (
+            <li class="panel__item">
+              <a href={item.href} class:list={[isCurrent(item.href) && 'is-current']}>
+                <span class="index">{String(i + 1).padStart(2, '0')}</span>
+                <span class="panel__label">{item.label}</span>
+                <span class="panel__arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="panel__foot">
+        <a class="btn btn--violet panel__cta" href="/contact">
+          Apply for a slot
+          <span class="btn__arrow" aria-hidden="true">→</span>
+        </a>
+        <div class="panel__meta">
+          <a class="link" href={`mailto:${site.email}`}>{site.email}</a>
+          <a class="link" href={site.instagram.url} rel="noopener">{site.instagram.handle}</a>
+        </div>
+        <div class="panel__mark"><Monogram size={22} tone="chrome" /></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition:
+      background-color 400ms var(--ease),
+      border-color 400ms var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+
+  /* Opaque enough to stay Midnight over the pearl sections, blurred for depth. */
+  .nav.is-stuck {
+    background: rgb(10 18 40 / 0.95);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border-bottom-color: var(--line);
+  }
+
+  .nav.is-open {
+    background: var(--midnight);
+    border-bottom-color: var(--line);
+  }
+
+  .nav__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: 4.5rem;
+  }
+
+  @media (min-width: 62rem) {
+    .nav__bar {
+      height: 5.25rem;
+    }
+  }
+
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .nav__links {
+    display: none;
+  }
+
+  @media (min-width: 62rem) {
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 2.25rem;
+      margin-inline: auto;
+    }
+  }
+
+  .nav__link {
+    position: relative;
+    font-size: var(--t-small);
+    font-weight: 500;
+    color: var(--chrome);
+    padding-block: 0.4rem;
+    transition: color 300ms var(--ease);
+  }
+
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--pink);
+    scale: 0 1;
+    transform-origin: left center;
+    transition: scale 380ms var(--ease);
+  }
+
+  .nav__link:hover,
+  .nav__link:focus-visible,
+  .nav__link.is-current {
+    color: var(--pearl);
+  }
+
+  .nav__link:hover::after,
+  .nav__link:focus-visible::after,
+  .nav__link.is-current::after {
+    scale: 1 1;
+  }
+
+  .nav__end {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .nav__cta {
+    display: none;
+  }
+
+  @media (min-width: 62rem) {
+    .nav__cta {
+      display: inline-flex;
+    }
+  }
+
+  /* Toggle */
+  .nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    color: var(--pearl);
+  }
+
+  @media (min-width: 62rem) {
+    .nav__toggle {
+      display: none;
+    }
+  }
+
+  .nav__toggle-label {
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .nav__bars {
+    display: grid;
+    gap: 5px;
+    width: 20px;
+  }
+
+  .nav__bars i {
+    display: block;
+    height: 1.5px;
+    background: var(--pearl);
+    transition: transform 380ms var(--ease);
+  }
+
+  .nav.is-open .nav__bars i:first-child {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+
+  .nav.is-open .nav__bars i:last-child {
+    transform: translateY(-3.25px) rotate(-45deg);
+  }
+
+  /* Mobile panel */
+  .panel {
+    position: fixed;
+    inset: 4.5rem 0 0;
+    background: var(--midnight);
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 320ms var(--ease);
+  }
+
+  .panel[hidden] {
+    display: none;
+  }
+
+  .panel.is-visible {
+    opacity: 1;
+  }
+
+  .panel__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    padding-block: 1.5rem 2.5rem;
+  }
+
+  .panel__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .panel__item a {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr auto;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding-block: 1.35rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .panel__label {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .panel__item a.is-current .panel__label {
+    color: var(--pearl);
+  }
+
+  .panel__item a.is-current .panel__arrow,
+  .panel__arrow {
+    color: var(--chrome);
+    font-size: 1.125rem;
+  }
+
+  .panel__item a.is-current .panel__arrow {
+    color: var(--pink);
+  }
+
+  .panel__foot {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .panel__cta {
+    justify-content: center;
+    padding-block: 1.05rem;
+  }
+
+  .panel__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .panel__mark {
+    padding-top: 0.5rem;
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-nav]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-nav-panel]');
+  const label = document.querySelector<HTMLElement>('[data-nav-label]');
+
+  if (header && toggle && panel && label) {
+    let open = false;
+
+    const setOpen = (next: boolean) => {
+      open = next;
+      toggle.setAttribute('aria-expanded', String(next));
+      header.classList.toggle('is-open', next);
+      label.textContent = next ? 'Close' : 'Menu';
+      document.body.style.overflow = next ? 'hidden' : '';
+
+      if (next) {
+        panel.hidden = false;
+        requestAnimationFrame(() => panel.classList.add('is-visible'));
+      } else {
+        panel.classList.remove('is-visible');
+        const done = () => {
+          if (!open) panel.hidden = true;
+          panel.removeEventListener('transitionend', done);
+        };
+        panel.addEventListener('transitionend', done);
+      }
+    };
+
+    toggle.addEventListener('click', () => setOpen(!open));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && open) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Close if the viewport grows past the mobile breakpoint.
+    const mq = window.matchMedia('(min-width: 62rem)');
+    mq.addEventListener('change', (e) => {
+      if (e.matches && open) setOpen(false);
+    });
+
+    // Sticky treatment
+    const onScroll = () => header.classList.toggle('is-stuck', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

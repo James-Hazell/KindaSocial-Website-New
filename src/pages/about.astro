@@ -1,0 +1,419 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHero from '~/components/PageHero.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import Portrait from '~/components/Portrait.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Monogram from '~/components/Monogram.astro';
+import { site } from '~/data/site';
+
+const standards = [
+  {
+    n: '01',
+    title: 'Confident, never loud',
+    body: 'We do not shout to be heard. The work, the receipts and the screenshots carry the volume. The tone stays level even when the news is big.',
+  },
+  {
+    n: '02',
+    title: 'Dry, not jokey',
+    body: 'A wink, never a punchline. We are self-aware about being a creator agency in a sea of creator agencies. Funny like a smart text, not like a brand on TikTok.',
+  },
+  {
+    n: '03',
+    title: 'Specific over clever',
+    body: '“Booked fifty thousand in DMs” beats “next-level growth” every time. Numbers, names, screenshots. If the sentence works without the specifics, the sentence is weak.',
+  },
+];
+
+const principles = [
+  { k: 'Capped roster', v: 'Amy directs every account. The number of clients is limited by that fact, not by a marketing decision.' },
+  { k: 'Rolling agreements', v: 'No twelve-month lock-in. If the work stops earning its retainer you should be able to leave.' },
+  { k: 'Written before published', v: 'Strategy is signed off before anything goes live. You always know what is coming.' },
+  { k: 'Human-written voice', v: 'AI is fine for research. It is obvious the moment it touches a script, so it never does.' },
+];
+---
+
+<Base
+  title="About"
+  description={`${site.name} is a founder-led content and growth studio for personal brands, run by ${site.founder}. Capped roster, written strategy, human-written voice.`}>
+  <PageHero
+    index="03"
+    label="About"
+    title="Founder-led, and <em>deliberately small.</em>"
+    lede="KindaSocial is a content and growth studio for creators, founders and personal brands with an audience but not the time, team or systems to scale it. It is run by one person who works on every account, which is the whole reason the roster stays short."
+    meta={[
+      { k: 'Founded by', v: site.founder },
+      { k: 'Based', v: 'United Kingdom' },
+      { k: 'Working with', v: 'UK & Europe, US, Australia' },
+      { k: 'Roster', v: 'Capped, by design' },
+    ]}
+  />
+
+  <!-- ============================================ founder -->
+  <section class="section founder">
+    <div class="shell founder__grid">
+      <div class="founder__media">
+        <Portrait
+          src="/images/amy-portrait.jpg"
+          alt={`${site.founder}, founder of ${site.name}`}
+          caption={`${site.founder} · founder & strategy director`}
+          ratio="4 / 5"
+          seed={2}
+        />
+      </div>
+
+      <div class="founder__body">
+        <span class="label" data-reveal>The founder</span>
+        <h2 class="h2 founder__title" data-reveal>{site.founder}</h2>
+
+        <p class="lead founder__lede" data-reveal>
+          A young entrepreneur with a sharp eye for what works online, and a low tolerance for
+          content that performs busyness instead of results.
+        </p>
+
+        <div class="prose">
+          <p data-reveal>
+            KindaSocial started the way most useful things do — by fixing something irritating.
+            Experts with genuine authority were losing to people with none of it, because the other
+            side had a system and they had a phone and good intentions.
+          </p>
+          <p data-reveal>
+            So the method got built and tested on our own account first: 800 followers to 40,000 in
+            under six months, before any of it was sold to a client. Positioning before production.
+            One filming rhythm instead of bursts. Distribution cut for each platform rather than
+            copied across them. The inbox worked daily, because that is where the revenue actually
+            is.
+          </p>
+          <p data-reveal>
+            Amy still writes the strategy and directs the work on every account. Not because it
+            scales elegantly, but because it is the difference between an agency you hire and an
+            agency you recommend.
+          </p>
+        </div>
+
+        <div class="founder__links actions" data-reveal>
+          <a class="link" href={site.instagram.url} rel="noopener">
+            {site.instagram.handle}
+            <span aria-hidden="true">→</span>
+          </a>
+          <a class="link" href={site.linkedin.url} rel="noopener">
+            LinkedIn
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ pull quote -->
+  <section class="section--tight pull">
+    <div class="shell">
+      <figure class="pull__inner" data-reveal>
+        <div class="pull__mark" aria-hidden="true"><Monogram size={26} tone="pearl" /></div>
+        <blockquote class="pull__quote">
+          <p class="display">
+            Attention is easy.<br />
+            <span class="editorial">Authority that books calls</span> is the hard part<span
+              class="accent-pink">.</span
+            >
+          </p>
+        </blockquote>
+        <figcaption class="label pull__by">The whole worldview, in one line</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================================ ecosystem -->
+  <section class="section on-pearl eco">
+    <div class="shell">
+      <SectionHead
+        index="02"
+        label="How it fits together"
+        title="Two brands. One loop."
+        aside="The agency holds the systems, the case studies and the results. The founder holds the trust. Each one feeds the other, which is exactly the structure we build for clients."
+      />
+
+      <div class="eco__grid">
+        <article class="eco__card" data-reveal>
+          <span class="label label--violet">Agency brand</span>
+          <h3 class="h3 eco__title">KindaSocial</h3>
+          <p class="body eco__body">
+            Revenue, systems and results. Speaks in we language, because it is a business with a
+            method rather than a person with opinions. Authority content and proof, in roughly a
+            seventy-thirty split.
+          </p>
+          <ul class="tags">
+            <li>System-driven</li>
+            <li>Proof-led</li>
+            <li>Premium</li>
+            <li>Authority-first</li>
+          </ul>
+        </article>
+
+        <div class="eco__link" aria-hidden="true">
+          <span class="eco__loop">↻</span>
+        </div>
+
+        <article class="eco__card" data-reveal>
+          <span class="label label--pink">Personal brand</span>
+          <h3 class="h3 eco__title">{site.founder}</h3>
+          <p class="body eco__body">
+            Attention, trust and humanity. A founder with a perspective and a way of operating that
+            people find worth following — not agency content in personal packaging.
+          </p>
+          <ul class="tags">
+            <li>Calm confidence</li>
+            <li>No fluff</li>
+            <li>Self-aware</li>
+            <li>Intentional</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ standards -->
+  <section class="section standards">
+    <div class="shell rail">
+      <aside class="rail__aside">
+        <span class="label" data-reveal>The standard</span>
+        <span class="index" data-reveal>/ 0 3</span>
+        <p class="body standards__aside" data-reveal>
+          The test for anything that goes out: would the founder say this out loud, sober, to a
+          smart friend?
+        </p>
+      </aside>
+
+      <div class="rail__main">
+        <ol class="rows">
+          {
+            standards.map((s) => (
+              <li class="row standard" data-reveal>
+                <span class="index">{s.n}</span>
+                <h3 class="h3">{s.title}</h3>
+                <p class="body standard__body">{s.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ principles -->
+  <section class="section section--tight principles">
+    <div class="shell">
+      <SectionHead index="04" label="How we operate" title="Four things we hold to." />
+      <dl class="principles__grid">
+        {
+          principles.map((p) => (
+            <div class="principle" data-reveal>
+              <dt class="h4">{p.k}</dt>
+              <dd class="body">{p.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <CtaBand
+    title="If the roster is open,<br />we would like <em>to hear from you.</em>"
+    body="A short form, then thirty minutes. We will tell you on the call whether this is the right move or whether you are three months early."
+    secondary={{ label: 'See pricing', href: '/pricing' }}
+  />
+</Base>
+
+<style>
+  .founder__grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  @media (min-width: 62rem) {
+    .founder__grid {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+      gap: clamp(3rem, 6vw, 5.5rem);
+      align-items: start;
+    }
+  }
+
+  .founder__media {
+    max-width: 24rem;
+  }
+
+  @media (min-width: 62rem) {
+    .founder__media {
+      position: sticky;
+      top: 7.5rem;
+      max-width: none;
+    }
+  }
+
+  .founder__title {
+    margin-top: 1rem;
+  }
+
+  .founder__lede {
+    margin-top: 1.25rem;
+    max-width: 44ch;
+  }
+
+  .prose {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .prose p {
+    color: var(--chrome);
+    font-size: var(--t-small);
+    max-width: 60ch;
+  }
+
+  .founder__links {
+    margin-top: 2.25rem;
+    gap: 1.75rem;
+  }
+
+  /* ---------- pull quote ---------- */
+  .pull__inner {
+    position: relative;
+    margin: 0;
+    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 4vw, 4rem);
+    border-block: 1px solid var(--line);
+    text-align: left;
+  }
+
+  .pull__mark {
+    position: absolute;
+    top: clamp(1.5rem, 3vw, 2.5rem);
+    left: clamp(1.5rem, 4vw, 4rem);
+    opacity: 0.4;
+  }
+
+  .pull__quote p {
+    max-width: 20ch;
+  }
+
+  .pull__quote .editorial {
+    color: var(--chrome);
+  }
+
+  .pull__by {
+    margin-top: 2rem;
+  }
+
+  /* ---------- ecosystem ---------- */
+  .eco__grid {
+    display: grid;
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 62rem) {
+    .eco__grid {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 0;
+    }
+  }
+
+  .eco__card {
+    padding: clamp(1.75rem, 3.5vw, 2.75rem);
+    background: #fff;
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .eco__title {
+    margin-top: 1rem;
+  }
+
+  .eco__body {
+    margin-top: 1rem;
+    font-size: var(--t-small);
+    flex: 1;
+  }
+
+  .eco__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .eco__loop {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid var(--line-dark);
+    background: var(--pearl);
+    color: var(--violet);
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .tags {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-dark);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .tags li {
+    font-size: var(--t-label);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding: 0.35rem 0.65rem;
+    border: 1px solid var(--line-dark);
+    border-radius: 100px;
+  }
+
+  /* ---------- standards ---------- */
+  .standards__aside {
+    margin-top: 1rem;
+    font-size: var(--t-small);
+    max-width: 26ch;
+  }
+
+  .standard__body {
+    font-size: var(--t-small);
+  }
+
+  /* ---------- principles ---------- */
+  .principles__grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 48rem) {
+    .principles__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .principles__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .principle {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .principle dd {
+    margin: 0.75rem 0 0;
+    font-size: var(--t-small);
+  }
+</style>

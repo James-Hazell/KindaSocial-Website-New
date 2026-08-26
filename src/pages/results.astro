@@ -1,0 +1,388 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHero from '~/components/PageHero.astro';
+import SectionHead from '~/components/SectionHead.astro';
+import CtaBand from '~/components/CtaBand.astro';
+import Monogram from '~/components/Monogram.astro';
+import { results, testimonials } from '~/data/site';
+
+const measures = [
+  {
+    n: '01',
+    metric: 'Retention',
+    against: 'Not views',
+    body: 'How far into a piece people actually get. It is the only number that predicts whether the next one travels.',
+  },
+  {
+    n: '02',
+    metric: 'Saves and sends',
+    against: 'Not likes',
+    body: 'A like is a reflex. A save is someone deciding they will need this again, and a send is someone staking their own credibility on it.',
+  },
+  {
+    n: '03',
+    metric: 'Profile visits',
+    against: 'Not impressions',
+    body: 'The moment curiosity turns into intent. It is the hinge between a feed and a funnel.',
+  },
+  {
+    n: '04',
+    metric: 'Conversations opened',
+    against: 'Not followers',
+    body: 'Tagged back to the post that caused them. This is the number the monthly read-out leads with.',
+  },
+  {
+    n: '05',
+    metric: 'Calls booked',
+    against: 'Not engagement rate',
+    body: 'The one that pays for the retainer. Everything upstream is only interesting because it moves this.',
+  },
+];
+---
+
+<Base
+  title="Results"
+  description="Two accounts, one method. 800 to 40k followers in under six months in-house, and 49k to 156k for a coaching client — with the mechanism behind each.">
+  <PageHero
+    index="02"
+    label="Results"
+    title="Receipts over <em>adjectives.</em>"
+    lede="Any agency can show you a screenshot of a spike. The useful part is the mechanism underneath it — what was changed, in what order, and what it did to the numbers that lead to revenue."
+    meta={[
+      { k: 'Accounts shown', v: 'Two' },
+      { k: 'Window', v: 'Six months each' },
+      { k: 'Method', v: 'Identical' },
+      { k: 'Metrics led with', v: 'Retention, then calls' },
+    ]}
+  />
+
+  <!-- ============================================ case studies -->
+  {
+    results.map((r, i) => (
+      <section class:list={['section', 'case', i % 2 === 1 && 'on-pearl']}>
+        <div class="shell">
+          <div class="case__head" data-reveal>
+            <span class="label">{r.discipline}</span>
+            <span class="index">/ {r.n.split('').join(' ')}</span>
+          </div>
+
+          <div class="case__grid">
+            <div class="case__left">
+              <h2 class="h2 case__client" data-reveal>
+                {r.client}
+              </h2>
+              <p class="lead case__summary" data-reveal>
+                {r.summary}
+              </p>
+
+              <ul class="moves">
+                {r.detail.map((d) => (
+                  <li class="move" data-reveal>
+                    <span class="move__bar" aria-hidden="true" />
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <aside class="case__panel" data-reveal>
+              <div class="panel__mark" aria-hidden="true">
+                <Monogram size={22} tone={i % 2 === 1 ? 'muted' : 'pearl'} />
+              </div>
+
+              <span class="label">Before</span>
+              <p class="panel__from tnum">{r.from}</p>
+
+              <div class="panel__rule" aria-hidden="true">
+                <span class="panel__arrow">↓</span>
+              </div>
+
+              <span class="label">After</span>
+              <p class="panel__to tnum">{r.to}</p>
+
+              <dl class="panel__meta">
+                <div>
+                  <dt class="label label--bare">Measure</dt>
+                  <dd class="small">{r.unit}</dd>
+                </div>
+                <div>
+                  <dt class="label label--bare">Window</dt>
+                  <dd class="small">{r.window}</dd>
+                </div>
+              </dl>
+            </aside>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- ============================================ what we measure -->
+  <section class="section measure">
+    <div class="shell">
+      <SectionHead
+        index="03"
+        label="What we count"
+        title="Five numbers. None of them vanity."
+        aside="Reach is a number that makes reports look good. These are the ones that tell you whether the machine is working."
+      />
+
+      <ol class="rows">
+        {
+          measures.map((m) => (
+            <li class="row measure__row" data-reveal>
+              <span class="index">{m.n}</span>
+              <div class="measure__pair">
+                <h3 class="h3">{m.metric}</h3>
+                <span class="measure__against label label--pink">{m.against}</span>
+              </div>
+              <p class="body measure__body">{m.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================ voices -->
+  <section class="section on-pearl voices">
+    <div class="shell">
+      <SectionHead index="04" label="Client said" title="In their words." />
+      <div class="voices__grid">
+        {
+          testimonials.map((t) => (
+            <figure class="voice" data-reveal>
+              <blockquote class="voice__quote h3">“{t.quote}”</blockquote>
+              <figcaption class="voice__by label">
+                {t.attribution} · {t.role}
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    label="Now booking"
+    title="Want the same write-up<br />about <em>your</em> account?"
+    body="Bring the audience and the offer. We will tell you on the call which of these levers is the one holding you back."
+    secondary={{ label: 'How we work', href: '/services' }}
+  />
+</Base>
+
+<style>
+  .case__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .on-pearl .case__head {
+    border-color: var(--line-dark);
+  }
+
+  .case__grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  @media (min-width: 62rem) {
+    .case__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+      gap: clamp(3rem, 6vw, 5rem);
+      align-items: start;
+    }
+  }
+
+  .case__client {
+    max-width: 16ch;
+  }
+
+  .case__summary {
+    margin-top: 1.5rem;
+    max-width: 54ch;
+  }
+
+  .moves {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .move {
+    display: flex;
+    gap: 1.25rem;
+    align-items: baseline;
+    padding-block: 1.15rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--t-small);
+    color: var(--chrome);
+  }
+
+  .on-pearl .move {
+    border-color: var(--line-dark);
+    color: var(--ink-muted);
+  }
+
+  .move:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .on-pearl .move:last-child {
+    border-color: var(--line-dark);
+  }
+
+  .move__bar {
+    flex-shrink: 0;
+    width: 14px;
+    height: 1px;
+    background: var(--violet);
+    translate: 0 -0.3em;
+  }
+
+  /* panel */
+  .case__panel {
+    position: relative;
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(165deg, var(--midnight-raised) 0%, var(--midnight-sunken) 100%);
+  }
+
+  .on-pearl .case__panel {
+    border-color: var(--line-dark);
+    background: #fff;
+  }
+
+  .panel__mark {
+    position: absolute;
+    top: clamp(1.75rem, 3.5vw, 2.5rem);
+    right: clamp(1.75rem, 3.5vw, 2.5rem);
+    opacity: 0.85;
+  }
+
+  .on-pearl .panel__mark {
+    opacity: 1;
+  }
+
+  .panel__from,
+  .panel__to {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    margin-top: 0.6rem;
+  }
+
+  .panel__from {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.25rem);
+    color: var(--chrome);
+  }
+
+  .on-pearl .panel__from {
+    color: var(--ink-muted);
+  }
+
+  .panel__to {
+    font-size: clamp(3rem, 2rem + 4.5vw, 4.5rem);
+  }
+
+  .panel__rule {
+    position: relative;
+    margin-block: 1.5rem;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .on-pearl .panel__rule {
+    background: var(--line-dark);
+  }
+
+  .panel__arrow {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    translate: 0 -50%;
+    background: var(--midnight-raised);
+    padding-right: 0.6rem;
+    color: var(--pink);
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .on-pearl .panel__arrow {
+    background: #fff;
+  }
+
+  .panel__meta {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .on-pearl .panel__meta {
+    border-color: var(--line-dark);
+  }
+
+  .panel__meta dd {
+    margin: 0.4rem 0 0;
+  }
+
+  /* measures */
+  .measure__pair {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .measure__against::before {
+    content: '— ';
+  }
+
+  .measure__body {
+    font-size: var(--t-small);
+  }
+
+  /* voices */
+  .voices__grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 56rem) {
+    .voices__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .voice {
+    margin: 0;
+    padding: clamp(1.5rem, 3vw, 2rem);
+    background: #fff;
+    border: 1px solid var(--line-dark);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .voice__quote {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    flex: 1;
+  }
+
+  .voice__by {
+    margin-top: 1.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line-dark);
+  }
+</style>

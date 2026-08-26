@@ -1,0 +1,491 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHero from '~/components/PageHero.astro';
+import Monogram from '~/components/Monogram.astro';
+import { site, packages } from '~/data/site';
+
+/**
+ * Form delivery.
+ * Deployed on Netlify this works as-is (Netlify Forms picks it up at build).
+ * On any other host, set FORM_ENDPOINT to a Formspree / Basin / Formcarry URL.
+ * See README.md § Forms.
+ */
+const FORM_ENDPOINT = '';
+
+const expect = [
+  { n: '01', k: 'You send the form', v: 'Two minutes. Enough for us to know whether there is something here.' },
+  { n: '02', k: 'We reply inside two working days', v: 'With a yes and a calendar link, or a no and the reason.' },
+  { n: '03', k: 'Thirty minutes on a call', v: 'Your audience, your offer, what has already been tried. No deck.' },
+  { n: '04', k: 'A written proposal', v: 'Scope, retainer, start date. Signed off before any work begins.' },
+];
+---
+
+<Base
+  title="Contact"
+  description="Apply for a slot. A short form, then a thirty-minute discovery call — we will tell you on the call whether this is the right move.">
+  <PageHero
+    index="05"
+    label="Apply"
+    title="Two creator slots.<br /><em>Apply at the link.</em>"
+    lede="The roster is capped because Amy directs every account. Send the form and we will come back inside two working days — with a yes and a calendar link, or a no and the reason why."
+    meta={[
+      { k: 'Reply time', v: 'Two working days' },
+      { k: 'Call length', v: 'Thirty minutes' },
+      { k: 'Cost', v: 'Free, and no deck' },
+      { k: 'Time zones', v: 'UK & Europe, US, AU' },
+    ]}
+  />
+
+  <section class="section apply">
+    <div class="shell apply__grid">
+      <!-- ---------------------------------------- form -->
+      <div class="apply__form-col">
+        <form
+          class="form"
+          id="apply-form"
+          name="apply"
+          method="POST"
+          action={FORM_ENDPOINT || undefined}
+          data-netlify="true"
+          netlify-honeypot="company-website"
+          data-endpoint={FORM_ENDPOINT}>
+          <input type="hidden" name="form-name" value="apply" />
+
+          <!-- honeypot: real people never see this -->
+          <p class="hp" aria-hidden="true">
+            <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
+          </p>
+
+          <fieldset class="form__set">
+            <legend class="label">Who you are</legend>
+
+            <div class="form__pair">
+              <div class="field">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+            </div>
+
+            <div class="form__pair">
+              <div class="field">
+                <label for="handle">Main account</label>
+                <input
+                  id="handle"
+                  name="handle"
+                  type="text"
+                  placeholder="@yourhandle or a link"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label for="region">Where you are</label>
+                <select id="region" name="region" required>
+                  <option value="">Select</option>
+                  {site.regions.map((r) => <option value={r}>{r}</option>)}
+                  <option value="Elsewhere">Elsewhere</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form__set">
+            <legend class="label">What you are after</legend>
+
+            <div class="form__pair">
+              <div class="field">
+                <label for="interest">Interested in</label>
+                <select id="interest" name="interest" required>
+                  <option value="">Select</option>
+                  {packages.map((p) => <option value={p.name}>{`${p.name} — ${p.price}/mo`}</option>)}
+                  <option value="Not sure yet">Not sure yet</option>
+                  <option value="club">KindaSocial Club waitlist</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="revenue">Monthly revenue</label>
+                <select id="revenue" name="revenue">
+                  <option value="">Prefer not to say</option>
+                  <option value="Under $5k">Under $5k</option>
+                  <option value="$5k–$15k">$5k–$15k</option>
+                  <option value="$15k–$50k">$15k–$50k</option>
+                  <option value="$50k+">$50k and up</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="message">What is not working right now</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                required
+                placeholder="The audience, the offer, and the bit that keeps stalling. Specifics help."
+              ></textarea>
+            </div>
+          </fieldset>
+
+          <button class="btn btn--violet form__submit" type="submit">
+            Send the application
+            <span class="btn__arrow" aria-hidden="true">→</span>
+          </button>
+
+          <p class="small muted form__note">
+            No newsletter, no sequence. This goes to one inbox and gets a written reply.
+          </p>
+
+          <p class="form__status" role="status" aria-live="polite" data-form-status></p>
+        </form>
+      </div>
+
+      <!-- ---------------------------------------- aside -->
+      <aside class="apply__aside">
+        <div class="apply__card">
+          <div class="apply__mark" aria-hidden="true"><Monogram size={22} tone="pearl" /></div>
+          <span class="label">What happens next</span>
+          <ol class="expect">
+            {
+              expect.map((e) => (
+                <li class="expect__item">
+                  <span class="index">{e.n}</span>
+                  <div>
+                    <h2 class="h4">{e.k}</h2>
+                    <p class="body expect__body">{e.v}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+
+        <div class="apply__direct">
+          <span class="label">Or skip the form</span>
+          <a class="apply__email h3" href={`mailto:${site.email}`}>{site.email}</a>
+          <div class="apply__socials">
+            <a class="link" href={site.instagram.url} rel="noopener">
+              {site.instagram.handle}
+              <span aria-hidden="true">→</span>
+            </a>
+            <a class="link" href={site.linkedin.url} rel="noopener">
+              LinkedIn
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .apply__grid {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  @media (min-width: 62rem) {
+    .apply__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: clamp(3rem, 6vw, 5rem);
+      align-items: start;
+    }
+  }
+
+  /* ---------- form ---------- */
+  .form__set {
+    border: 0;
+    padding: 0;
+    margin: 0 0 2.5rem;
+  }
+
+  .form__set legend {
+    padding: 0 0 1.25rem;
+    width: 100%;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1.75rem;
+  }
+
+  .form__pair {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 40rem) {
+    .form__pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .field label {
+    font-size: var(--t-label);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--chrome);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 0.85rem 0.95rem;
+    background: var(--midnight-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--pearl);
+    font-size: 0.9375rem;
+    font-family: var(--font-body);
+    transition:
+      border-color 260ms var(--ease),
+      background-color 260ms var(--ease);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 8rem;
+    line-height: 1.55;
+  }
+
+  .field select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--chrome) 50%),
+      linear-gradient(135deg, var(--chrome) 50%, transparent 50%);
+    background-position:
+      calc(100% - 1.1rem) 1.25rem,
+      calc(100% - 0.75rem) 1.25rem;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2.5rem;
+  }
+
+  .field select option {
+    background: var(--midnight-raised);
+    color: var(--pearl);
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: rgb(181 186 199 / 0.55);
+  }
+
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: var(--line-strong);
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--violet);
+    outline: none;
+    background: var(--midnight-sunken);
+  }
+
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 2px;
+  }
+
+  .field :is(input, select, textarea):user-invalid {
+    border-color: var(--pink);
+  }
+
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form__submit {
+    width: 100%;
+    justify-content: center;
+    padding-block: 1.05rem;
+  }
+
+  @media (min-width: 40rem) {
+    .form__submit {
+      width: auto;
+      padding-inline: 2rem;
+    }
+  }
+
+  .form__note {
+    margin-top: 1.25rem;
+    max-width: 46ch;
+  }
+
+  .form__status {
+    margin-top: 1.25rem;
+    font-size: var(--t-small);
+    color: var(--chrome);
+  }
+
+  .form__status:empty {
+    display: none;
+  }
+
+  .form__status[data-state='ok'] {
+    color: var(--pearl);
+    padding: 1rem 1.15rem;
+    border: 1px solid rgb(110 60 255 / 0.5);
+    border-radius: var(--radius);
+    background: rgb(110 60 255 / 0.1);
+  }
+
+  .form__status[data-state='error'] {
+    color: var(--pink);
+  }
+
+  /* ---------- aside ---------- */
+  .apply__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 62rem) {
+    .apply__aside {
+      position: sticky;
+      top: 7.5rem;
+    }
+  }
+
+  .apply__card {
+    position: relative;
+    padding: clamp(1.75rem, 3.5vw, 2.25rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, var(--midnight-raised) 0%, var(--midnight-sunken) 100%);
+  }
+
+  .apply__mark {
+    position: absolute;
+    top: clamp(1.75rem, 3.5vw, 2.25rem);
+    right: clamp(1.75rem, 3.5vw, 2.25rem);
+    opacity: 0.4;
+  }
+
+  .expect {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .expect__item {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.5rem;
+    padding-block: 1.15rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .expect__item .index {
+    padding-top: 0.3rem;
+  }
+
+  .expect__body {
+    margin-top: 0.4rem;
+    font-size: var(--t-small);
+  }
+
+  .apply__direct {
+    padding: clamp(1.75rem, 3.5vw, 2.25rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+
+  .apply__email {
+    display: block;
+    margin-top: 0.85rem;
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+    word-break: break-word;
+    background-image: linear-gradient(var(--pink), var(--pink));
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    transition: background-size 420ms var(--ease);
+  }
+
+  .apply__email:hover,
+  .apply__email:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .apply__socials {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 1.75rem;
+    flex-wrap: wrap;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#apply-form');
+  const status = document.querySelector<HTMLElement>('[data-form-status]');
+
+  if (form && status) {
+    // Preselect from ?interest=club so the pricing-page link lands in the right place.
+    const interest = new URLSearchParams(window.location.search).get('interest');
+    if (interest) {
+      const select = form.querySelector<HTMLSelectElement>('#interest');
+      const match = select && [...select.options].find((o) => o.value === interest);
+      if (select && match) select.value = match.value;
+    }
+
+    const endpoint = form.dataset.endpoint;
+
+    form.addEventListener('submit', async (event) => {
+      // Without a configured endpoint, let the browser post natively
+      // (Netlify Forms handles it). Only intercept when we can do better.
+      if (!endpoint) return;
+
+      event.preventDefault();
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      status.removeAttribute('data-state');
+      status.textContent = 'Sending.';
+      if (button) button.disabled = true;
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+
+        if (!response.ok) throw new Error(String(response.status));
+
+        form.reset();
+        status.dataset.state = 'ok';
+        status.textContent =
+          'Received. You will get a written reply within two working days — a yes and a calendar link, or a no and the reason.';
+      } catch {
+        status.dataset.state = 'error';
+        status.textContent =
+          'That did not send. Email hello@kindasocial.co directly and it will get the same reply.';
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
+  }
+</script>

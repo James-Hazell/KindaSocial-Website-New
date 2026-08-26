@@ -1,0 +1,131 @@
+---
+import Base from '~/layouts/Base.astro';
+import Monogram from '~/components/Monogram.astro';
+import { nav } from '~/data/site';
+---
+
+<Base title="Page not found" description="That page does not exist. Here is where everything else lives.">
+  <section class="nf">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="shell nf__inner">
+      <div class="nf__top">
+        <span class="label label--pink">Error</span>
+        <span class="index">/ 4 0 4</span>
+      </div>
+
+      <h1 class="display nf__title">
+        This one does not<br /><span class="editorial">exist</span><span class="accent-pink">.</span>
+      </h1>
+
+      <p class="lead nf__lede">
+        Either the link is wrong or we moved something without leaving a note. Both are fixable.
+      </p>
+
+      <ul class="nf__links">
+        <li class="nf__link">
+          <a href="/">
+            <span class="index">00</span>
+            <span class="nf__label">Home</span>
+            <span class="nf__arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+        {
+          nav.map((item, i) => (
+            <li class="nf__link">
+              <a href={item.href}>
+                <span class="index">{String(i + 1).padStart(2, '0')}</span>
+                <span class="nf__label">{item.label}</span>
+                <span class="nf__arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </li>
+          ))
+        }
+        <li class="nf__link">
+          <a href="/contact">
+            <span class="index">05</span>
+            <span class="nf__label">Contact</span>
+            <span class="nf__arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nf__mark" aria-hidden="true"><Monogram size={26} tone="chrome" /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(4rem, 3rem + 8vw, 9rem);
+  }
+
+  .nf__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .nf__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .nf__title .editorial {
+    color: var(--chrome);
+  }
+
+  .nf__lede {
+    margin-top: 1.75rem;
+    max-width: 42ch;
+  }
+
+  .nf__links {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--line);
+    max-width: 34rem;
+  }
+
+  .nf__link a {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-block: 1.1rem;
+    border-bottom: 1px solid var(--line);
+    transition: padding-left 320ms var(--ease);
+  }
+
+  .nf__link a:hover,
+  .nf__link a:focus-visible {
+    padding-left: 0.4rem;
+  }
+
+  .nf__label {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+  }
+
+  .nf__arrow {
+    color: var(--chrome);
+    transition: transform 320ms var(--ease);
+  }
+
+  .nf__link a:hover .nf__arrow {
+    color: var(--pink);
+    transform: translateX(4px);
+  }
+
+  .nf__mark {
+    margin-top: 3rem;
+  }
+</style>

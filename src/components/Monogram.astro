@@ -1,0 +1,47 @@
+---
+/**
+ * The mark — Brand Guidelines §04.
+ * For avatars, favicons, watermarks, end-frames and content sign-off.
+ * Weight rule: ≤24px bumps Medium → SemiBold; at 14px → Bold. Never looks like dust.
+ */
+interface Props {
+  size?: number;
+  /** `muted` is the watermark tone for light surfaces — held above AA rather than
+   *  faded with opacity, so the mark never looks like dust. */
+  tone?: 'pearl' | 'midnight' | 'chrome' | 'muted';
+  class?: string;
+}
+
+const { size = 24, tone = 'pearl', class: className = '' } = Astro.props;
+const weight = size <= 14 ? 700 : size <= 24 ? 600 : 500;
+const colors = {
+  pearl: 'var(--pearl)',
+  midnight: 'var(--midnight)',
+  chrome: 'var(--chrome)',
+  muted: 'var(--ink-muted)',
+};
+// The period stays pink in every variant, darkened on light surfaces to hold contrast.
+const stop = tone === 'muted' || tone === 'midnight' ? '#d61f68' : 'var(--pink)';
+---
+
+<span
+  class:list={['ks', className]}
+  style={`--ks-size:${size}px;--ks-weight:${weight};--ks-color:${colors[tone]};--ks-stop:${stop}`}
+  aria-hidden="true">ks<span class="ks__stop">.</span></span
+>
+
+<style>
+  .ks {
+    font-family: var(--font-display);
+    font-size: var(--ks-size);
+    font-weight: var(--ks-weight);
+    letter-spacing: -0.045em;
+    line-height: 1;
+    color: var(--ks-color);
+    display: inline-block;
+  }
+
+  .ks__stop {
+    color: var(--ks-stop);
+  }
+</style>

@@ -1,0 +1,173 @@
+---
+import Wordmark from './Wordmark.astro';
+import Monogram from './Monogram.astro';
+import { site, nav, services } from '~/data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="shell">
+    <div class="foot__top">
+      <div class="foot__pitch">
+        <span class="label" data-reveal>Apply</span>
+        <p class="foot__line h2" data-reveal>
+          You stay on camera.<br />We run <span class="editorial accent-pink">the machine</span>.
+        </p>
+        <a class="btn btn--violet foot__cta" href="/contact" data-reveal>
+          Book a discovery call
+          <span class="btn__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="foot__cols">
+        <div class="foot__col">
+          <span class="label label--bare">Pages</span>
+          <ul>
+            <li><a href="/">Home</a></li>
+            {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="foot__col">
+          <span class="label label--bare">Services</span>
+          <ul>
+            {
+              services.slice(0, 5).map((s) => (
+                <li>
+                  <a href={`/services#${s.n}`}>{s.title}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="foot__col">
+          <span class="label label--bare">Elsewhere</span>
+          <ul>
+            <li><a href={site.instagram.url} rel="noopener">Instagram</a></li>
+            <li><a href={site.linkedin.url} rel="noopener">LinkedIn</a></li>
+            <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          </ul>
+        </div>
+
+        <div class="foot__col">
+          <span class="label label--bare">Working with</span>
+          <ul>
+            {site.regions.map((r) => <li><span>{r}</span></li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot__mark" aria-hidden="true">
+      <Wordmark size="clamp(3rem, 15vw, 11rem)" />
+    </div>
+
+    <div class="foot__base">
+      <p class="small muted">© {year} {site.name}. {site.tagline}</p>
+      <div class="foot__base-end">
+        <p class="small muted">{site.domain}</p>
+        <Monogram size={20} tone="chrome" />
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    position: relative;
+    padding-top: clamp(4rem, 3rem + 5vw, 7rem);
+    padding-bottom: 2rem;
+    border-top: 1px solid var(--line);
+    background:
+      radial-gradient(120% 90% at 50% 130%, rgb(110 60 255 / 0.16) 0%, rgb(110 60 255 / 0) 60%),
+      var(--midnight);
+  }
+
+  .foot__top {
+    display: grid;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+
+  @media (min-width: 62rem) {
+    .foot__top {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: start;
+    }
+  }
+
+  .foot__pitch {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .foot__line {
+    font-family: var(--font-display);
+    font-weight: 500;
+    max-width: 14ch;
+  }
+
+  .foot__cta {
+    margin-top: 0.5rem;
+  }
+
+  .foot__cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.25rem 1.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    .foot__cols {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .foot__col ul {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .foot__col li {
+    font-size: var(--t-small);
+    color: var(--chrome);
+  }
+
+  .foot__col a {
+    transition: color 260ms var(--ease);
+  }
+
+  .foot__col a:hover,
+  .foot__col a:focus-visible {
+    color: var(--pearl);
+  }
+
+  .foot__mark {
+    margin-top: clamp(3.5rem, 8vw, 6rem);
+    line-height: 0.8;
+    opacity: 0.9;
+  }
+
+  .foot__base {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .foot__base-end {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+/**
+ * The wordmark — Brand Guidelines §02.
+ * "kinda" carries the human tone, "social" the category, the period is the stop.
+ * The period stays pink in every variant. Never recolour, letterspace or stretch.
+ */
+interface Props {
+  variant?: 'dark' | 'light' | 'knockout';
+  size?: string;
+  class?: string;
+}
+
+const { variant = 'dark', size = '1.1875rem', class: className = '' } = Astro.props;
+---
+
+<span class:list={['wm', `wm--${variant}`, className]} style={`--wm-size:${size}`} aria-hidden="true">
+  <span class="wm__kinda">Kinda</span><span class="wm__social">Social</span><span class="wm__stop">.</span>
+</span>
+<span class="visually-hidden">KindaSocial</span>
+
+<style>
+  .wm {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--wm-size);
+    letter-spacing: -0.035em;
+    line-height: 1;
+    white-space: nowrap;
+    /* clear space — at least the height of the capital K */
+    padding: 0.18em 0.06em;
+  }
+
+  .wm--dark .wm__kinda {
+    color: var(--pearl);
+  }
+  .wm--dark .wm__social {
+    color: #9d7cff; /* violet, lifted for AA legibility on midnight */
+  }
+
+  .wm--light .wm__kinda {
+    color: var(--midnight);
+  }
+  .wm--light .wm__social {
+    color: var(--violet);
+  }
+
+  .wm--knockout .wm__kinda,
+  .wm--knockout .wm__social {
+    color: var(--pearl);
+  }
+
+  .wm__stop {
+    color: var(--pink);
+  }
+</style>
