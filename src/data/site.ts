@@ -33,6 +33,7 @@ export const nav = [
 export const services = [
   {
     n: '01',
+    src: '/images/service-01.jpg',
     title: 'Strategy & positioning',
     lede: 'We decide what you stand for before we film a single thing.',
     body: 'A positioning sprint that names your angle, your audience and the three arguments you own. We map the pillars, the proof, and the offer the content is actually pointing at. Everything after this is execution against a written plan you have signed off.',
@@ -45,6 +46,7 @@ export const services = [
   },
   {
     n: '02',
+    src: '/images/service-02.jpg',
     title: 'Content production',
     lede: 'You record. We do the other ninety percent.',
     body: 'Scripts written in your voice, shot lists you can film on a phone in one sitting, then editing, captions, overlays, thumbnails and sign-off. Twelve to twenty-four pieces a month depending on the retainer. Nothing is generated and left unread.',
@@ -57,6 +59,7 @@ export const services = [
   },
   {
     n: '03',
+    src: '/images/service-03.jpg',
     title: 'Distribution & growth',
     lede: 'Posting is not distribution. This is the part most people skip.',
     body: 'Scheduling across Instagram, TikTok, LinkedIn and YouTube Shorts, cut for each platform rather than cross-posted. We watch retention and saves rather than likes, and we rewrite the next month against what the numbers said.',
@@ -69,6 +72,7 @@ export const services = [
   },
   {
     n: '04',
+    src: '/images/service-04.jpg',
     title: 'Community & DM ops',
     lede: 'The revenue is in the inbox. Someone has to be in there.',
     body: 'Comment and DM management with a reply framework built from your sales calls, so a warm question turns into a booked call instead of an unread request. We track which conversations came from which post, and hand you the ones worth your time.',
@@ -81,6 +85,7 @@ export const services = [
   },
   {
     n: '05',
+    src: '/images/service-05.jpg',
     title: 'Paid amplification',
     lede: 'Once something works organically, we put money behind it.',
     body: 'We do not run cold ads against untested creative. Winning organic pieces get promoted to lookalike and interest audiences, with the destination being a booked call. Available as an add-on to Growth and Premium retainers.',
@@ -93,6 +98,7 @@ export const services = [
   },
   {
     n: '06',
+    src: '/images/service-06.jpg',
     title: 'Brand systems',
     lede: 'A personal brand is an online business. It needs a system.',
     body: 'Visual identity, templates, sign-offs and file conventions so your content looks like one brand rather than twelve moods. Built once, documented, and handed to you as a guideline you keep whether you stay with us or not.',

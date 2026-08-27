@@ -5,6 +5,7 @@ import SectionHead from '~/components/SectionHead.astro';
 import CtaBand from '~/components/CtaBand.astro';
 import Faq from '~/components/Faq.astro';
 import Portrait from '~/components/Portrait.astro';
+import ImageQuote from '~/components/ImageQuote.astro';
 import FeaturedIn from '~/components/FeaturedIn.astro';
 import { services, process, faqs } from '~/data/site';
 
@@ -43,39 +44,53 @@ const forWhom = [
   <section class="section detail">
     <div class="shell">
       {
-        services.map((s, i) => (
-          <article class="svc" id={s.n}>
-            <div class="svc__index" data-reveal>
-              <span class="index">/ {s.n.split('').join(' ')}</span>
+        services.map((svc, i) => (
+          <article class:list={['svc', i % 2 === 1 && 'svc--flip']} id={`svc-${svc.n}`}>
+            <div class="svc__media">
+              <Portrait
+                src={svc.src}
+                alt={`${svc.title} in practice`}
+                ratio="4 / 3"
+                seed={i + 1}
+                parallax
+              />
             </div>
 
-            <div class="svc__main">
+            <div class="svc__body">
+              <span class="index svc__n" data-reveal>
+                / {svc.n.split('').join(' ')}
+              </span>
               <h2 class="h2 svc__title" data-reveal="text">
-                {s.title}
+                {svc.title}
               </h2>
               <p class="lead svc__lede" data-reveal>
-                {s.lede}
+                {svc.lede}
               </p>
-              <p class="body svc__body" data-reveal>
-                {s.body}
+              <p class="body svc__copy" data-reveal>
+                {svc.body}
               </p>
-            </div>
 
-            <div class="svc__aside" data-reveal>
-              <span class="label">What lands</span>
-              <ul class="deliverables">
-                {s.deliverables.map((d) => (
-                  <li class="deliverable">{d}</li>
-                ))}
-              </ul>
+              <div class="svc__deliv" data-reveal>
+                <span class="label">What lands</span>
+                <ul class="deliverables">
+                  {svc.deliverables.map((d) => (
+                    <li class="deliverable">{d}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
-
-            {i < services.length - 1 && <hr class="rule svc__rule" data-reveal="rule" />}
           </article>
         ))
       }
     </div>
   </section>
+
+  <ImageQuote
+    src="/images/quote-services.jpg"
+    quote="Talent makes the content.<br />We make <em>the machine</em> that makes the talent."
+    attribution="The whole model, in one line"
+    seed={1}
+  />
 
   <FeaturedIn tone="dark" />
 
@@ -173,22 +188,30 @@ const forWhom = [
 </Base>
 
 <style>
+  /* Alternating image / text rows. The flip on odd rows is what stops six
+     services reading as one long list. */
   .svc {
     display: grid;
-    gap: 1.5rem;
-    padding-block: clamp(2.5rem, 5vw, 4rem);
-  }
-
-  .svc:first-child {
-    padding-top: 0;
+    gap: clamp(1.75rem, 4vw, 3rem);
+    padding-block: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: center;
   }
 
   @media (min-width: 62rem) {
     .svc {
-      grid-template-columns: 5rem minmax(0, 6fr) minmax(0, 4fr);
-      gap: clamp(2rem, 4vw, 4rem);
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(3rem, 6vw, 5.5rem);
     }
+
+    .svc--flip .svc__media {
+      order: 2;
+    }
+  }
+
+  .svc__n {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--pink);
   }
 
   .svc__title {
@@ -203,12 +226,16 @@ const forWhom = [
     max-width: 34ch;
   }
 
-  .svc__body {
+  .svc__copy {
     margin-top: 1.25rem;
     font-size: var(--t-small);
   }
 
-  .svc__aside .label {
+  .svc__deliv {
+    margin-top: 2rem;
+  }
+
+  .svc__deliv .label {
     padding-bottom: 0.85rem;
     border-bottom: 1px solid var(--line);
   }
@@ -235,11 +262,6 @@ const forWhom = [
     margin-top: 0.62em;
     border-radius: 50%;
     background: var(--violet);
-  }
-
-  .svc__rule {
-    grid-column: 1 / -1;
-    margin-top: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   /* ---------- process ---------- */

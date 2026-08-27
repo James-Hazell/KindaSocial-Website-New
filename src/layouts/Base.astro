@@ -9,6 +9,8 @@ import TopBar from '~/components/TopBar.astro';
 import Nav from '~/components/Nav.astro';
 import Footer from '~/components/Footer.astro';
 import ScrollTop from '~/components/ScrollTop.astro';
+import Motion from '~/components/Motion.astro';
+import { ClientRouter } from 'astro:transitions';
 import { site } from '~/data/site';
 
 interface Props {
@@ -76,6 +78,8 @@ const orgSchema = {
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} is:inline />
+
+    <ClientRouter />
   </head>
 
   <body>
@@ -89,40 +93,6 @@ const orgSchema = {
     <Footer />
     <ScrollTop />
 
-    <script>
-      // Whisper-level reveal. Nothing moves more than 12px, nothing bounces.
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
-
-      if (prefersReduced || !('IntersectionObserver' in window)) {
-        targets.forEach((el) => el.classList.add('is-in'));
-      } else {
-        // Stagger is counted per section, not across the document. A global index
-        // means the tenth section starts mid-sequence and the last items sit
-        // waiting out a delay they did nothing to earn.
-        const seen = new Map<Element, number>();
-
-        targets.forEach((el) => {
-          if (el.style.getPropertyValue('--reveal-delay')) return;
-          const group = el.closest('section, footer, header') ?? document.body;
-          const i = seen.get(group) ?? 0;
-          seen.set(group, i + 1);
-          el.style.setProperty('--reveal-delay', `${Math.min(i, 7) * 70}ms`);
-        });
-
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) return;
-              entry.target.classList.add('is-in');
-              io.unobserve(entry.target);
-            });
-          },
-          { rootMargin: '0px 0px -10% 0px', threshold: 0.06 },
-        );
-
-        targets.forEach((el) => io.observe(el));
-      }
-    </script>
+    <Motion />
   </body>
 </html>

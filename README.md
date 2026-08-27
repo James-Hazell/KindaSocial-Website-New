@@ -87,23 +87,40 @@ Two deliberate deviations from a literal reading of the guidelines, both for scr
 
 ### Motion
 
-Four reveal types, not one — uniform fade-up on everything is what makes a page read as templated.
-Set with `data-reveal` on any element; the observer lives in `Base.astro`.
+Everything lives in `components/Motion.astro`, re-initialising on `astro:page-load` as well as
+first paint — the client router swaps the document without re-running module scripts.
 
-| Value | Entrance | Used for |
+| Hook | Entrance | Used for |
 | --- | --- | --- |
-| *(empty)* | fade, 12px rise | body copy, cards, list rows |
-| `text` | clip-wipe downward, no opacity | headings — type arrives rather than materialises |
-| `media` | wipe up, picture settles out of a slight push-in | images and framed panels |
-| `rule` | scaleX from the left | hairlines |
+| `data-split` | lines rise out of a mask, staggered per line | big headings |
+| `data-reveal` | fade, 10px rise | body copy, cards, list rows |
+| `data-reveal="text"` | clip-wipe downward, no opacity | headings JS did not split |
+| `data-reveal="media"` | wipe up, picture settles out of a push-in | images and framed panels |
+| `data-reveal="rule"` | scaleX from the left | hairlines |
+| `data-parallax` | drifts against the scroll | full-bleed images |
+| `data-count` | digits count up once | stat figures |
 
-Stagger is counted **per section**, not across the document, so the tenth section starts its own
-sequence rather than picking up mid-way through a global one.
+`data-split` wraps each word, measures which line it landed on, and staggers **by line** — per-word
+ripple reads as a gimmick. It is pure progressive enhancement: the styles only bite once the script
+adds `.is-split`, so a failure leaves plain visible text rather than an empty heading. Lines are
+re-measured on resize.
 
-Three things loop continuously: the proof marquee, the featured-in rail and the testimonial rail
-(two rows, opposite directions, pausing on hover and on keyboard focus). All motion — reveals,
-marquees and the top bar's pulse — stops under `prefers-reduced-motion: reduce`, where the rails
-become ordinary scrollers with a tab stop.
+Parallax is native `animation-timeline: view()` — no scroll listener, no JS, and simply static
+where the browser lacks it.
+
+Two things worth knowing before changing the reveal timing:
+
+- The observer's negative bottom `rootMargin` buys a slightly-early entrance but carves out a dead
+  band at maximum scroll, where footer content can never intersect and would stay clipped forever.
+  `sweep()` closes that. Do not remove it.
+- Stagger is counted **per section**, not across the document, so the tenth section starts its own
+  sequence rather than picking up mid-way through a global one.
+
+Three things loop continuously: the proof marquee, the press rail and the testimonial rail (two
+rows, opposite directions, pausing on hover and keyboard focus). Page transitions cross-fade via
+Astro's `ClientRouter`. All of it — reveals, marquees, parallax, count-ups, the top bar's pulse —
+stops under `prefers-reduced-motion: reduce`, where the rails become ordinary scrollers with a tab
+stop.
 
 ---
 

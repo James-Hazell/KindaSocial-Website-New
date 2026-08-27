@@ -13,8 +13,12 @@ The founder photography was not accessible to the build, so both portrait slots 
 golden-hour light study instead. It looks deliberate rather than broken, but a face beats an
 abstract every time on a personal-branding site.
 
-There are now **nineteen** image slots. Drop files into `public/images/` using the filenames in
+There are now **thirty-two** image slots. Drop files into `public/images/` using the filenames in
 `public/images/README.md` and they replace the placeholders automatically — one at a time is fine.
+
+This is now the single biggest gap between the site and a finished site. Ten placeholder variants
+ship so a page carrying a dozen frames never repeats a panel, but they are abstractions of light,
+and a personal-branding agency selling faces should be showing faces.
 
 The six that matter most are the **page hero bands** (`hero.jpg`, `hero-services.jpg`, and so on).
 Every page now opens with a full-bleed image, which is the single most defining thing about the

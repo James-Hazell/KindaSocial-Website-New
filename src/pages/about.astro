@@ -58,6 +58,7 @@ const principles = [
           caption={`${site.founder} · founder & strategy director`}
           ratio="4 / 5"
           seed={2}
+          parallax
         />
       </div>
 
@@ -132,6 +133,27 @@ const principles = [
           caption="Where the revenue is"
           ratio="4 / 5"
           seed={6}
+        />
+        <Portrait
+          src="/images/studio-04.jpg"
+          alt="Scripting the month"
+          caption="Scripts, before anything films"
+          ratio="4 / 5"
+          seed={4}
+        />
+        <Portrait
+          src="/images/studio-05.jpg"
+          alt="Reviewing cuts"
+          caption="The edit, cut per platform"
+          ratio="4 / 5"
+          seed={1}
+        />
+        <Portrait
+          src="/images/studio-06.jpg"
+          alt="On a strategy call"
+          caption="Fortnightly, on the record"
+          ratio="4 / 5"
+          seed={2}
         />
       </div>
     </div>
@@ -329,6 +351,12 @@ const principles = [
     .strip__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1.25rem;
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .strip__grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
     }
   }
 

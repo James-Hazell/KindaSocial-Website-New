@@ -40,9 +40,9 @@ const uid = `hb${seed}-${Math.random().toString(36).slice(2, 7)}`;
   <div class="band__media" aria-hidden={exists ? undefined : 'true'}>
     {
       exists ? (
-        <img src={src} alt={alt} class="band__img" fetchpriority="high" decoding="async" />
+        <img src={src} alt={alt} class="band__img" data-parallax fetchpriority="high" decoding="async" />
       ) : (
-        <svg class="band__img" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+        <svg class="band__img" data-parallax viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
           <defs>
             <linearGradient id={`${uid}-w`} x1="0.1" y1="0" x2="0.85" y2="1">
               <stop offset="0%" stop-color="#1a1712" />
@@ -72,7 +72,7 @@ const uid = `hb${seed}-${Math.random().toString(36).slice(2, 7)}`;
 
   <div class="shell band__inner">
     {eyebrow && <span class="label label--pink band__eyebrow" data-reveal>{eyebrow}</span>}
-    <h1 class="band__title" data-reveal="text" set:html={title} />
+    <h1 class="band__title" data-split set:html={title} />
     {lede && <p class="band__lede" data-reveal>{lede}</p>}
     <div class="band__actions actions" data-reveal>
       <slot />

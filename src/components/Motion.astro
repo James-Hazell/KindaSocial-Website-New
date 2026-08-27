@@ -1,0 +1,242 @@
+---
+/**
+ * All scroll and entrance behaviour, in one place.
+ *
+ * Everything re-initialises on `astro:page-load` as well as first paint, because
+ * with the client router a navigation swaps the document without re-running
+ * module scripts.
+ */
+---
+
+<script>
+  type El = HTMLElement;
+
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ------------------------------------------------ line-by-line headings */
+
+  /**
+   * Wrap every word so it can be masked, then tag each with the line it landed
+   * on so the stagger runs by line rather than by word.
+   *
+   * Styles only apply once `.is-split` is set, so a failure here leaves plain
+   * visible text rather than an empty heading.
+   */
+  function split(el: El) {
+    if (el.dataset.splitDone === '1') return;
+
+    const words: El[] = [];
+
+    const walk = (node: Node) => {
+      for (const child of [...node.childNodes]) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const text = child.textContent ?? '';
+          if (!text.trim()) continue;
+
+          const frag = document.createDocumentFragment();
+          for (const part of text.split(/(\s+)/)) {
+            if (!part) continue;
+            if (/^\s+$/.test(part)) {
+              frag.appendChild(document.createTextNode(part));
+              continue;
+            }
+            const outer = document.createElement('span');
+            outer.className = 'sw';
+            const inner = document.createElement('span');
+            inner.className = 'sw__i';
+            inner.textContent = part;
+            outer.appendChild(inner);
+            frag.appendChild(outer);
+            words.push(outer);
+          }
+          child.parentNode?.replaceChild(frag, child);
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          // <br> carries the line break; nested <em>/<span> keep their styling
+          // because we only ever replace the text nodes inside them.
+          if ((child as El).tagName !== 'BR') walk(child);
+        }
+      }
+    };
+
+    walk(el);
+    if (!words.length) return;
+
+    el.dataset.splitDone = '1';
+    (el as any)._words = words;
+    measure(el);
+    el.classList.add('is-split');
+  }
+
+  /** Group words into lines by vertical position. Re-run on resize. */
+  function measure(el: El) {
+    const words: El[] = (el as any)._words;
+    if (!words) return;
+    let line = -1;
+    let lastTop: number | null = null;
+    for (const w of words) {
+      const top = w.offsetTop;
+      if (lastTop === null || Math.abs(top - lastTop) > 2) {
+        line += 1;
+        lastTop = top;
+      }
+      w.style.setProperty('--l', String(line));
+    }
+  }
+
+  /* ------------------------------------------------------------ count-up */
+
+  /** Animate the digits in a figure, leaving any prefix/suffix alone. */
+  function countUp(el: El) {
+    if (el.dataset.countDone === '1') return;
+    el.dataset.countDone = '1';
+
+    const raw = el.textContent ?? '';
+    // Only the "800 → 40k" shape; anything else is left exactly as written.
+    const parts = raw.match(/^(\D*)(\d[\d,]*)(\D*)$/);
+    if (!parts) return;
+
+    const [, pre, digits, post] = parts;
+    const target = Number(digits!.replace(/,/g, ''));
+    if (!Number.isFinite(target) || target === 0) return;
+
+    const dur = 1400;
+    const start = performance.now();
+    const fmt = digits!.includes(',');
+
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / dur, 1);
+      // Same curve as the CSS easing, so numbers settle with everything else.
+      const eased = 1 - Math.pow(1 - t, 3);
+      const value = Math.round(target * eased);
+      el.textContent = `${pre}${fmt ? value.toLocaleString('en-GB') : value}${post}`;
+      if (t < 1) requestAnimationFrame(tick);
+    };
+
+    el.textContent = `${pre}0${post}`;
+    requestAnimationFrame(tick);
+  }
+
+  /* ------------------------------------------------------------- reveals */
+
+  let io: IntersectionObserver | null = null;
+
+  /**
+   * Reveal anything the observer cannot reach.
+   *
+   * The negative bottom rootMargin below buys a slightly-early entrance, but it
+   * also carves out a dead band: at maximum scroll, an element sitting in the
+   * last slice of the viewport never intersects, so footer content would stay
+   * clipped forever. Sweeping once the page bottom is in view closes that.
+   */
+  function sweep() {
+    const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 8;
+    if (!atBottom) return;
+    document
+      .querySelectorAll<El>('[data-reveal]:not(.is-in), [data-split]:not(.is-in)')
+      .forEach((el) => {
+        el.classList.add('is-in');
+        el.querySelectorAll<El>('[data-count]').forEach(countUp);
+        io?.unobserve(el);
+      });
+  }
+
+  function initReveals() {
+    io?.disconnect();
+
+    const targets = document.querySelectorAll<El>('[data-reveal], [data-split]');
+    const isReduced = reduced();
+
+    if (!isReduced) {
+      document.querySelectorAll<El>('[data-split]').forEach(split);
+    }
+
+    if (isReduced || !('IntersectionObserver' in window)) {
+      targets.forEach((el) => el.classList.add('is-in'));
+      document.querySelectorAll<El>('[data-count]').forEach((el) => (el.dataset.countDone = '1'));
+      return;
+    }
+
+    // Stagger is counted per section, not across the document. A global index
+    // means the tenth section starts mid-sequence and the last items sit
+    // waiting out a delay they did nothing to earn.
+    const seen = new Map<Element, number>();
+    targets.forEach((el) => {
+      if (el.style.getPropertyValue('--reveal-delay')) return;
+      const group = el.closest('section, footer, header') ?? document.body;
+      const i = seen.get(group) ?? 0;
+      seen.set(group, i + 1);
+      el.style.setProperty('--reveal-delay', `${Math.min(i, 7) * 80}ms`);
+    });
+
+    io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as El;
+          el.classList.add('is-in');
+          el.querySelectorAll<El>('[data-count]').forEach(countUp);
+          if (el.hasAttribute('data-count')) countUp(el);
+          io?.unobserve(el);
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    );
+
+    targets.forEach((el) => io!.observe(el));
+  }
+
+  /* --------------------------------------------------- masthead behaviour */
+
+  function initNavScroll() {
+    const header = document.querySelector<El>('[data-nav]');
+    if (!header) {
+      window.addEventListener('scroll', sweep, { passive: true });
+      return;
+    }
+
+    let last = window.scrollY;
+    let ticking = false;
+
+    const update = () => {
+      const y = window.scrollY;
+      const past = y > 260;
+      // Retract on the way down, return the moment they head back up — the
+      // masthead should be out of the way while reading and there when wanted.
+      header.classList.toggle('is-tucked', past && y > last + 4);
+      if (y < last - 4 || !past) header.classList.remove('is-tucked');
+      header.classList.toggle('is-scrolled', y > 8);
+      last = y;
+      ticking = false;
+      sweep();
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      },
+      { passive: true },
+    );
+    update();
+  }
+
+  /* ----------------------------------------------------------------- boot */
+
+  let resizeTimer: number | undefined;
+  window.addEventListener('resize', () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      document.querySelectorAll<El>('[data-split]').forEach(measure);
+    }, 180);
+  });
+
+  const boot = () => {
+    initReveals();
+    initNavScroll();
+  };
+
+  boot();
+  document.addEventListener('astro:page-load', boot);
+</script>

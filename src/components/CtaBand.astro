@@ -24,7 +24,7 @@ const {
       <div class="band__mark" aria-hidden="true"><Monogram size={30} tone="pearl" /></div>
 
       <span class="label label--pink" data-reveal>{label}</span>
-      <h2 class="band__title h2" data-reveal="text" set:html={title} />
+      <h2 class="band__title h2" data-split set:html={title} />
       {body && <p class="lead band__body" data-reveal>{body}</p>}
 
       <div class="actions band__actions" data-reveal>

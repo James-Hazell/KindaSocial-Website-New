@@ -9,6 +9,7 @@ import TestimonialRail from '~/components/TestimonialRail.astro';
 import SocialTile from '~/components/SocialTile.astro';
 import TileGrid from '~/components/TileGrid.astro';
 import CityStrip from '~/components/CityStrip.astro';
+import ImageQuote from '~/components/ImageQuote.astro';
 import CtaBand from '~/components/CtaBand.astro';
 import { services, results, differences, proofPoints, process, workTiles, clientTypes } from '~/data/site';
 ---
@@ -37,14 +38,14 @@ import { services, results, differences, proofPoints, process, workTiles, client
         <div class="stats__item" data-reveal>
           <dt class="label">Own account</dt>
           <dd>
-            <span class="stat__figure tnum">800 → 40k</span>
+            <span class="stat__figure tnum"><span data-count>800</span> → <span data-count>40</span>k</span>
             <span class="stat__caption">Followers in under six months, before we sold the method.</span>
           </dd>
         </div>
         <div class="stats__item" data-reveal>
           <dt class="label">Client account</dt>
           <dd>
-            <span class="stat__figure tnum">49k → 156k</span>
+            <span class="stat__figure tnum"><span data-count>49</span>k → <span data-count>156</span>k</span>
             <span class="stat__caption">Six months of one filming rhythm and platform-native cuts.</span>
           </dd>
         </div>
@@ -115,6 +116,13 @@ import { services, results, differences, proofPoints, process, workTiles, client
     </div>
   </section>
 
+  <ImageQuote
+    src="/images/quote-home.jpg"
+    quote="Talent makes the content.<br />We make <em>the machine</em> that makes the talent."
+    attribution="The whole model, in one line"
+    seed={1}
+  />
+
   <Marquee items={proofPoints} />
 
   <!-- ============================================ services -->
@@ -174,7 +182,7 @@ import { services, results, differences, proofPoints, process, workTiles, client
       </div>
 
       <div class="work__foot" data-reveal>
-        <a class="link" href="/services#06">
+        <a class="link" href="/services#svc-06">
           How the brand system gets built
           <span aria-hidden="true">→</span>
         </a>
@@ -305,6 +313,13 @@ import { services, results, differences, proofPoints, process, workTiles, client
 
     <TestimonialRail tone="pearl" />
   </section>
+
+  <ImageQuote
+    src="/images/quote-proof.jpg"
+    quote="Every booked call, traced back to <em>the post that caused it</em>."
+    attribution="What the monthly read-out leads with"
+    seed={2}
+  />
 
   <CityStrip />
 

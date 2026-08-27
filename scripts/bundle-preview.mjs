@@ -69,7 +69,7 @@ const css = [
 // Fail loudly rather than shipping a page that merely looks wrong. These are
 // rules the layout cannot do without; if the collection above ever misses a
 // source again, the build stops here instead of at the user.
-for (const rule of ['band__scrim', 'band__inner', 'nav__bar', 'tiles', 'fi__track']) {
+for (const rule of ['band__scrim', 'band__inner', 'nav__bar', 'tiles', 'fi__track', 'iq__quote', 'sw__i']) {
   if (!css.includes(rule)) throw new Error(`bundle-preview: stylesheet is missing .${rule}`);
 }
 
@@ -127,6 +127,19 @@ const shellFooter = extract(first, '<footer class="foot"', 'footer');
 const shellTopbar = extract(first, '<aside class="topbar"', 'aside');
 const shellTotop = extract(first, '<button class="totop"', 'button');
 
+// Astro inlines each component's script as a module. Reusing them verbatim
+// means the preview animates exactly as the site does — a re-implementation
+// here would drift the moment the real one changed. The client router is an
+// external file and is deliberately not included: it would fight the panel
+// routing below.
+const moduleScripts = [];
+for (const r of routes) {
+  const html = read(r.file);
+  for (const m of html.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
+    if (!moduleScripts.includes(m[1])) moduleScripts.push(m[1]);
+  }
+}
+
 const panels = routes.map((r) => {
   const html = read(r.file);
   const main = innerOf(extract(html, '<main id="main"', 'main'), 'main');
@@ -169,46 +182,22 @@ ${shellFooter}
 
 ${shellTotop}
 
+${moduleScripts.map((js) => `<script type="module">${js}</script>`).join('\n')}
+
 <script>
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ---- reveal on scroll (same behaviour as the built site) ---- */
-  function reveal(scope) {
-    var targets = scope.querySelectorAll('[data-reveal]:not(.is-in)');
-    if (reduced || !('IntersectionObserver' in window)) {
-      targets.forEach(function (el) { el.classList.add('is-in'); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
-        io.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    targets.forEach(function (el, i) {
-      if (!el.style.getPropertyValue('--reveal-delay')) {
-        el.style.setProperty('--reveal-delay', (i % 6) * 65 + 'ms');
-      }
-      io.observe(el);
-    });
-  }
-
-  /* ---- routing between panels ---- */
   var routes = document.querySelectorAll('[data-route]');
-  var header = document.querySelector('[data-nav]');
 
   function go(pathname, push) {
     var found = false;
     routes.forEach(function (r) {
       var on = r.dataset.route === pathname;
       r.classList.toggle('is-active', on);
-      if (on) { found = true; document.title = r.dataset.title; reveal(r); }
+      if (on) { found = true; document.title = r.dataset.title; }
     });
     if (!found) return false;
 
-    // Mirror the real site's current-page states.
     document.querySelectorAll('.nav__link, .panel__item a').forEach(function (a) {
       var on = a.getAttribute('href') === pathname;
       a.classList.toggle('is-current', on);
@@ -218,6 +207,10 @@ ${shellTotop}
 
     if (push) history.pushState({ p: pathname }, '', '#' + pathname);
     window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+
+    // The real motion code re-initialises on this event, which is exactly what
+    // a router swap needs — so the preview reuses it rather than duplicating it.
+    document.dispatchEvent(new Event('astro:page-load'));
     return true;
   }
 
@@ -227,18 +220,20 @@ ${shellTotop}
     var url = a.getAttribute('href');
     var base = url.split('#')[0].replace(/\\/$/, '') || '/';
     var hash = url.indexOf('#') > -1 ? url.slice(url.indexOf('#') + 1) : '';
-
     if (!document.querySelector('[data-route="' + base + '"]')) return;
     e.preventDefault();
 
-    if (closeMenu) closeMenu();
+    // Close the mobile panel by driving its own toggle, so its state stays honest.
+    var toggle = document.querySelector('[data-nav-toggle]');
+    if (toggle && toggle.getAttribute('aria-expanded') === 'true') toggle.click();
+
     go(base, true);
 
     if (hash) {
       setTimeout(function () {
         var t = document.getElementById(hash);
         if (t) t.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-      }, 120);
+      }, 160);
     }
   });
 
@@ -246,98 +241,7 @@ ${shellTotop}
     go((location.hash || '#/').slice(1) || '/', false);
   });
 
-  /* ---- mobile menu ---- */
-  var toggle = document.querySelector('[data-nav-toggle]');
-  var panel = document.querySelector('[data-nav-panel]');
-  var label = document.querySelector('[data-nav-label]');
-  var open = false;
-  var closeMenu = null;
-
-  if (header && toggle && panel && label) {
-    function setOpen(next) {
-      open = next;
-      toggle.setAttribute('aria-expanded', String(next));
-      header.classList.toggle('is-open', next);
-      label.textContent = next ? 'Close' : 'Menu';
-      document.body.style.overflow = next ? 'hidden' : '';
-      if (next) {
-        panel.hidden = false;
-        requestAnimationFrame(function () { panel.classList.add('is-visible'); });
-      } else {
-        panel.classList.remove('is-visible');
-        setTimeout(function () { if (!open) panel.hidden = true; }, 340);
-      }
-    }
-    closeMenu = function () { if (open) setOpen(false); };
-    toggle.addEventListener('click', function () { setOpen(!open); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && open) { setOpen(false); toggle.focus(); }
-    });
-    window.matchMedia('(min-width: 62rem)').addEventListener('change', function (e) {
-      if (e.matches && open) setOpen(false);
-    });
-  }
-
-  /* ---- services mega-menu ---- */
-  var menu = document.querySelector('[data-menu]');
-  var menuToggle = document.querySelector('[data-menu-toggle]');
-  if (menu && menuToggle) {
-    var menuOpen = false;
-    var setMenu = function (next) {
-      menuOpen = next;
-      menu.classList.toggle('is-open', next);
-      menuToggle.setAttribute('aria-expanded', String(next));
-    };
-    menuToggle.addEventListener('click', function () { setMenu(!menuOpen); });
-    menu.addEventListener('mouseenter', function () { setMenu(true); });
-    menu.addEventListener('mouseleave', function () { setMenu(false); });
-    menu.addEventListener('focusin', function () { setMenu(true); });
-    menu.addEventListener('focusout', function (e) {
-      if (!menu.contains(e.relatedTarget)) setMenu(false);
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && menuOpen) { setMenu(false); menuToggle.focus(); }
-    });
-  }
-
-  /* ---- back to top ---- */
-  var totop = document.querySelector('[data-totop]');
-  if (totop) {
-    totop.hidden = false;
-    var onTop = function () {
-      totop.classList.toggle('is-in', window.scrollY > window.innerHeight * 0.9);
-    };
-    onTop();
-    window.addEventListener('scroll', onTop, { passive: true });
-    totop.addEventListener('click', function () {
-      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
-    });
-  }
-
-  /* ---- sticky header ---- */
-  if (header) {
-    var onScroll = function () { header.classList.toggle('is-stuck', window.scrollY > 8); };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-  }
-
-  /* ---- the form posts nowhere in a preview; say so rather than reloading ---- */
-  var form = document.querySelector('#apply-form');
-  var status = document.querySelector('[data-form-status]');
-  if (form && status) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-      status.dataset.state = 'ok';
-      status.textContent =
-        'This is a preview, so nothing was sent. On the live site this reaches one inbox and gets a written reply within two working days.';
-      status.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
-    });
-  }
-
-  /* ---- boot ---- */
   go((location.hash || '#/').slice(1) || '/', false);
-  reveal(document);
 })();
 </script>
 `;

@@ -68,3 +68,17 @@ thing against a Midnight interface, which is exactly why it works.
 
 - `og-default.png` — 1200 × 630 social share card. Regenerate only if the headline changes.
 - `../favicon.svg` and `../apple-touch-icon.png` — the `ks.` monogram per Brand Guidelines §04.
+
+## Added in the latest pass
+
+| Filename | Where | Crop | Export |
+| --- | --- | --- | --- |
+| `quote-home.jpg` | Home, first quote band | 16:9 | 2000 × 1125 |
+| `quote-proof.jpg` | Home, second quote band | 16:9 | 2000 × 1125 |
+| `quote-services.jpg` | Services, quote band | 16:9 | 2000 × 1125 |
+| `quote-results.jpg` | Results, quote band | 16:9 | 2000 × 1125 |
+| `service-01.jpg` … `service-06.jpg` | Services, one per alternating row | 4:3 | 1200 × 900 |
+| `studio-04.jpg` … `studio-06.jpg` | About, extended studio strip | 4:5 | 900 × 1125 |
+
+Quote bands carry a scrim and a slow parallax drift, so frames with depth in the middle read best.
+Anything flat and evenly lit will still work; it just does less.

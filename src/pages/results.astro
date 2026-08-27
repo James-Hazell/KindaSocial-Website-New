@@ -7,6 +7,7 @@ import Monogram from '~/components/Monogram.astro';
 import Portrait from '~/components/Portrait.astro';
 import TestimonialRail from '~/components/TestimonialRail.astro';
 import FeaturedIn from '~/components/FeaturedIn.astro';
+import ImageQuote from '~/components/ImageQuote.astro';
 import { results } from '~/data/site';
 
 const measures = [
@@ -94,6 +95,7 @@ const measures = [
               alt={`${r.client} — content from the engagement`}
               ratio="4 / 3"
               seed={i === 0 ? 3 : 6}
+              parallax
             />
 
             <aside class="case__panel" data-reveal>
@@ -128,6 +130,13 @@ const measures = [
       </section>
     ))
   }
+
+  <ImageQuote
+    src="/images/quote-results.jpg"
+    quote="Reach makes the report look good.<br /><em>Retention</em> tells you whether it worked."
+    attribution="Why the numbers below are the ones we lead with"
+    seed={2}
+  />
 
   <FeaturedIn tone="dark" />
 

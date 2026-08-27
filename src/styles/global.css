@@ -472,23 +472,25 @@ p {
 /* ---------- 8. Motion — reveal on scroll ---------- */
 
 /*
- * Four reveal types, not one. Uniform fade-up on every element is what makes a
- * page feel templated; different content wants different entrances.
+ * Five entrances, not one. Uniform fade-up on everything is what makes a page
+ * feel templated; different content wants a different arrival.
  *
- *   data-reveal            soft fade, 12px rise      body copy, cards, list rows
- *   data-reveal="text"     clip-wipe downward        headings — no opacity flicker
- *   data-reveal="media"    wipe + scale settle       images and framed panels
- *   data-reveal="rule"     scaleX from the left      hairlines
+ *   data-split             lines rise out of a mask       big headings
+ *   data-reveal            soft fade, 10px rise           body copy, cards, rows
+ *   data-reveal="text"     clip-wipe downward             headings JS did not split
+ *   data-reveal="media"    wipe + scale settle            images and framed panels
+ *   data-reveal="rule"     scaleX from the left           hairlines
  *
- * Delay is set per section by the observer, so a long page never queues a wait.
+ * Everything is slower and softer than a default fade-up on purpose. The tell of
+ * an expensive site is that motion resolves rather than snaps.
  */
 
 [data-reveal] {
   opacity: 0;
-  transform: translate3d(0, 12px, 0);
+  transform: translate3d(0, 10px, 0);
   transition:
-    opacity 760ms var(--ease-out),
-    transform 760ms var(--ease-out);
+    opacity 900ms var(--ease-out),
+    transform 900ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
@@ -505,7 +507,7 @@ p {
   opacity: 1;
   transform: none;
   clip-path: inset(-0.16em -0.12em 100% -0.12em);
-  transition: clip-path 1080ms var(--ease-out);
+  transition: clip-path 1200ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -518,7 +520,7 @@ p {
   opacity: 1;
   transform: none;
   clip-path: inset(0 0 100% 0);
-  transition: clip-path 1180ms var(--ease-out);
+  transition: clip-path 1300ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -527,8 +529,8 @@ p {
 }
 
 [data-reveal='media'] > * {
-  scale: 1.07;
-  transition: scale 1500ms var(--ease-out);
+  scale: 1.06;
+  transition: scale 1700ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -541,12 +543,94 @@ p {
   transform: none;
   transform-origin: left center;
   scale: 0 1;
-  transition: scale 980ms var(--ease-out);
+  transition: scale 1100ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
 [data-reveal='rule'].is-in {
   scale: 1 1;
+}
+
+/* ---- line-by-line heading reveal ----------------------------------------
+ * The script wraps each word and tags it with the line it landed on. Styles
+ * only bite once `.is-split` is added, so text is never hidden before or
+ * without JS. Words clip against their own box, hence the padding/margin pair
+ * — without it the mask shears descenders off. */
+
+[data-split] .sw {
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+[data-split].is-split .sw {
+  overflow: hidden;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+
+[data-split].is-split .sw__i {
+  display: inline-block;
+  transform: translate3d(0, 108%, 0);
+  transition: transform 1150ms var(--ease-out);
+  /* Stagger by line, not by word — per-word ripple reads as a gimmick. */
+  transition-delay: calc(var(--l, 0) * 105ms + var(--reveal-delay, 0ms));
+  will-change: transform;
+}
+
+[data-split].is-split.is-in .sw__i {
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+/* ---- scroll-linked parallax --------------------------------------------
+ * Native scroll-driven animation where the browser has it, nothing anywhere
+ * else. No JS, no scroll listener, no jank. The image is scaled past its frame
+ * so the drift never exposes an edge. */
+
+[data-parallax] {
+  scale: 1.16;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-parallax] {
+      animation: kx-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    @keyframes kx-parallax {
+      from {
+        translate: 0 -6.5%;
+      }
+      to {
+        translate: 0 6.5%;
+      }
+    }
+  }
+}
+
+/* ---- page transitions --------------------------------------------------- */
+
+::view-transition-old(root) {
+  animation: kx-fade-out 240ms var(--ease-io) both;
+}
+
+::view-transition-new(root) {
+  animation: kx-fade-in 480ms var(--ease-out) both;
+}
+
+@keyframes kx-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes kx-fade-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -574,6 +658,18 @@ p {
 
   [data-reveal='media'] > * {
     scale: 1;
+  }
+
+  [data-parallax] {
+    scale: 1;
+  }
+
+  [data-split].is-split .sw {
+    overflow: visible;
+  }
+
+  [data-split].is-split .sw__i {
+    transform: none;
   }
 }
 

@@ -41,7 +41,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
                 <ul class="mega__list">
                   {services.map((s) => (
                     <li>
-                      <a href={`/services#${s.n}`}>
+                      <a href={`/services#svc-${s.n}`}>
                         <span class="mega__n">{s.n}</span>
                         {s.title}
                       </a>
@@ -126,6 +126,18 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     z-index: 100;
     background: var(--midnight);
     border-bottom: 1px solid var(--line);
+    transition:
+      translate 520ms var(--ease-out),
+      min-height 420ms var(--ease-out);
+  }
+
+  /* Out of the way while reading, back the moment they scroll up. */
+  .nav.is-tucked {
+    translate: 0 -101%;
+  }
+
+  .nav.is-open {
+    translate: 0;
   }
 
   .nav__bar {
@@ -140,6 +152,13 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   @media (min-width: 62rem) {
     .nav__bar {
       min-height: 5.5rem;
+      transition: min-height 420ms var(--ease-out);
+    }
+
+    /* Tightens once past the hero — subtle, but it is the difference between
+       a header that sits there and one that responds. */
+    .nav.is-scrolled .nav__bar {
+      min-height: 4.5rem;
     }
   }
 
