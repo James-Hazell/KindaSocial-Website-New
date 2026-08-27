@@ -3,7 +3,7 @@
 The KindaSocial website. A static, seven-page marketing site for the agency — built from
 `KindaSocial Brand Guidelines v1.0` and the 2025 strategy documents.
 
-Built with [Astro](https://astro.build). No client framework, no runtime dependencies, ~171 KB on
+Built with [Astro](https://astro.build). No client framework, no runtime dependencies, ~129 KB on
 first load across six requests.
 
 ---
@@ -33,7 +33,9 @@ src/
                         SocialTile, ScrollTop
   pages/                one file per route
   styles/global.css     the design system — tokens, type scale, layout primitives, motion
+  styles/fonts.css      the four @font-face declarations, latin only
 public/
+  fonts/                the woff2 files those declarations point at
   images/               drop photographs here (see public/images/README.md)
   favicon.svg
 ```
@@ -68,7 +70,7 @@ faithful to the brand document than the earlier build was.
 | §02 Wordmark — two tones, one pink stop | `components/Wordmark.astro` |
 | §04 The mark, with the weight rule at small sizes | `components/Monogram.astro` |
 | §05 Five colours, strict proportions | `:root` tokens in `global.css` |
-| §06 DM Sans display, Inter body, Instrument Serif italic accent | `--font-*` tokens, `.display`/`.h1`/`.h2` |
+| §06 DM Sans display, Instrument Serif italic accent (body face deviates — see below) | `--font-*` tokens, `.display`/`.h1`/`.h2` |
 | §09 The four social templates | `components/SocialTile.astro`, rendered live on the home page |
 | §07–08 Voice — confident, dry, specific | all copy in `src/data/site.ts` |
 
@@ -84,6 +86,28 @@ Two deliberate deviations from a literal reading of the guidelines, both for scr
 - Caption sizes are 11–12px rather than the 8–9pt print spec, and the watermark monogram on light
   cards uses a darker pink for its stop. The guidelines' own rule applies: the mark should never
   look like dust.
+- **The body face is Instrument Sans, not Inter.** Guidelines §06 specify Inter; the $10K checklist
+  names Inter as a disqualifier. Instrument Sans resolves the conflict in the checklist's favour and
+  happens to be the companion to the Instrument Serif already in use, so the three faces come from
+  two families rather than three unrelated ones. It is also 29.4KB against Inter's 47.1KB. To revert,
+  change `--font-body` in `global.css` — it is one token and nothing else references the face.
+
+### Fonts
+
+Declared directly in `src/styles/fonts.css` rather than imported from `@fontsource`, and served
+from `public/fonts/` as latin-only. The packages ship every subset as separate `@font-face` blocks,
+each downloading only when a character matches — which sounds harmless until one stray glyph pulls a
+whole file. A single `№` was fetching 18.3KB of Cyrillic on every page load, because U+2116 sits
+inside fontsource's cyrillic range. Declaring the four faces by hand makes that impossible by
+construction rather than by vigilance.
+
+Arrows, ticks and crosses (→ ✓ ✕ ↻) fall outside the latin range and fall back to the system UI
+font. That is deliberate: they render near-identically and cost nothing.
+
+**There is no `<link rel="preload">` on the fonts, on purpose.** It was tried and measured: on Slow
+4G it pushed first paint from 1.6s to 3.0s and largest paint from 1.6s to 4.3s, because the eager
+font fetch competes with render-critical HTML for a narrow pipe. `font-display: swap` alone is
+faster here.
 
 ### Motion
 

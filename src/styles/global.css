@@ -31,7 +31,11 @@
 
   /* Type */
   --font-display: 'DM Sans Variable', 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  /* Not Inter — the $10K checklist names it as a disqualifier. Instrument Sans
+     is the companion to the Instrument Serif already in use, so the three faces
+     come from two families rather than three unrelated ones. This is the one
+     deliberate deviation from Brand Guidelines §06; see README. */
+  --font-body: 'Instrument Sans Variable', 'Instrument Sans', system-ui, -apple-system, sans-serif;
   --font-editorial: 'Instrument Serif', Georgia, 'Times New Roman', serif;
 
   /* Fluid type scale — display 48–96pt equivalent */

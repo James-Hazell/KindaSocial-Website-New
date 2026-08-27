@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Fonts — declared directly rather than imported from @fontsource.
+
+   The packages ship every subset (cyrillic, greek, vietnamese, latin-ext) as
+   separate @font-face blocks. Each only downloads when a character matches its
+   range, which sounds harmless until one stray glyph pulls a whole file: a
+   single № in a social tile was fetching 18.3KB of Cyrillic on every page load,
+   because U+2116 sits inside fontsource's cyrillic range.
+   Declaring the four faces here, latin only, makes that impossible by
+   construction rather than by vigilance.
+
+   Files live in public/fonts/ and are copied from the @fontsource packages,
+   which stay in devDependencies as the source of truth. To update a face,
+   reinstall the package and re-copy.
+
+   Arrows, ticks and crosses (→ ✓ ✕ ↻) sit outside this range and fall back to
+   the system UI font. That is deliberate — they render near-identically and
+   cost nothing.
+   ========================================================================== */
+
+/* Latin, per fontsource's own definition of the subset. */
+@font-face {
+  font-family: 'DM Sans Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 1000;
+  src: url('/fonts/dm-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Instrument Sans Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url('/fonts/instrument-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('/fonts/instrument-serif-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: url('/fonts/instrument-serif-latin-italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}

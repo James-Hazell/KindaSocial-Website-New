@@ -36,9 +36,13 @@ function inlineFonts(css) {
   return css.replace(/@font-face\s*\{[^}]*\}/g, (block) => {
     const url = block.match(/url\(([^)]*\.woff2)\)/);
     if (!url) return '';
-    const file = url[1].replace(/^\/_astro\//, '').replace(/["']/g, '');
-    if (!KEEP_SUBSET.test(file) || /cyrillic|greek|vietnamese/.test(file)) return '';
-    const bytes = fs.readFileSync(path.join(DIST, '_astro', file));
+    // Font URLs are root-relative (/fonts/… now, /_astro/… when Astro fingerprints
+    // them), so resolve against dist rather than assuming one directory.
+    const href = url[1].replace(/["']/g, '');
+    const file = path.join(DIST, href.replace(/^\//, ''));
+    if (!fs.existsSync(file)) return '';
+    if (!KEEP_SUBSET.test(path.basename(file)) || /cyrillic|greek|vietnamese/.test(file)) return '';
+    const bytes = fs.readFileSync(file);
     const data = `url(data:font/woff2;base64,${bytes.toString('base64')}) format("woff2")`;
     return block.replace(/src:[^;]+;/, `src: ${data};`);
   });

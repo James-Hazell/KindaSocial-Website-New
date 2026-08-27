@@ -392,7 +392,7 @@ export const clientTypes = [
 export const workTiles = [
   {
     kind: 'quote',
-    eyebrow: 'field notes № 12',
+    eyebrow: 'field notes no. 12',
     headline: 'Your audience doesn’t want more posts. They want better ones.',
     foot: '',
   },

@@ -60,6 +60,21 @@ real wordmark (Forbes and the FT as upright serif caps, Vogue letterspaced, TED 
 sans caps). Using a publication's name in a credit list is normal; redrawing their logo is not, so
 the site does the first and not the second.
 
+## 2c. The body typeface changed — a decision to confirm
+
+The body face moved from **Inter to Instrument Sans**. Your Brand Guidelines §06 specify Inter; the
+$10K checklist names Inter as a disqualifier. Both documents are yours and they disagree, so this
+was a judgement call made to keep moving rather than a change you asked for.
+
+Why Instrument Sans: it is the companion to the Instrument Serif already used for the editorial
+italic and the press wordmarks, so the site now draws three faces from two families instead of
+three unrelated ones. It is also 29.4KB against Inter's 47.1KB.
+
+If you would rather keep Inter and treat that checklist line as a deliberate deviation, it is one
+token — `--font-body` in `src/styles/global.css`. Nothing else references the face. What is worth
+avoiding is leaving the two documents contradicting each other unexamined; either way, update
+whichever document loses.
+
 ## 3. Contact details — confirm these are right
 
 In `src/data/site.ts`:
