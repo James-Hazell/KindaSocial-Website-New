@@ -109,7 +109,10 @@ const t = tones[(seed - 1) % tones.length]!;
 
   .iq__inner {
     position: relative;
-    margin: 0;
+    /* Block only. A bare `margin: 0` to strip the figure default also wipes the
+       `margin-inline: auto` .shell relies on, which pinned this band flush left
+       with 200px of dead space beside it on any viewport past --shell. */
+    margin-block: 0;
     text-align: center;
     padding-block: clamp(3rem, 7vw, 5rem);
     display: flex;
